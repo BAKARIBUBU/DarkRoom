@@ -11,21 +11,31 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3  # This is currently the latest version
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v4  # Updated to use setup-python v4
+        uses: actions/setup-python@v4
         with:
           python-version: '3.9'
+
+      - name: Check directory contents
+        run: |
+          echo "Current directory contents:"
+          ls -la  # List contents of the current directory to confirm the presence of requirements.txt
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt  # Update path to requirements.txt
+          pip install -r requirements.txt  # Ensure requirements.txt is in the current directory
 
       - name: Update requirements.txt
         run: |
-          pip freeze > requirements.txt  # Update path to requirements.txt
+          pip freeze > requirements.txt  # This will update requirements.txt in the root directory
+
+      - name: Check updated requirements.txt
+        run: |
+          echo "Updated requirements.txt contents:"
+          cat requirements.txt  # Display contents to confirm changes
 
       - name: Commit changes
         run: |
