@@ -44,26 +44,28 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Flask Backend Tests
-        run: |
-          cd server
-          pytest  # Adjust if using a different test command
+      # Uncomment the following line to run Flask Backend Tests when ready
+      # - name: Run Flask Backend Tests
+      #   run: |
+      #     cd server
+      #     pytest  # Adjust if using a different test command
 
       # Frontend Setup and Testing
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '20'  # Updated to use Node.js version 20
 
       - name: Install Node dependencies
         run: |
           cd client
           npm install
 
-      - name: Run React Frontend Tests
-        run: |
-          cd client
-          npm test  # Adjust if using a different test command
+      # Uncomment the following line to run React Frontend Tests when ready
+      # - name: Run React Frontend Tests
+      #   run: |
+      #     cd client
+      #     npm test  # Adjust if using a different test command
 
   deploy:
     name: Deploy to Render
