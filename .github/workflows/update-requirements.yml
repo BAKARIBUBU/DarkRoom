@@ -11,27 +11,24 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3  # This is currently the latest version
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v4  # Updated to use setup-python v4
         with:
           python-version: '3.9'
 
       - name: Install dependencies
         run: |
-          cd server
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements.txt  # Update path to requirements.txt
 
       - name: Update requirements.txt
         run: |
-          cd server
-          pip freeze > requirements.txt
+          pip freeze > requirements.txt  # Update path to requirements.txt
 
       - name: Commit changes
         run: |
-          cd server
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add requirements.txt
