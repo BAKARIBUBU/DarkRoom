@@ -15,7 +15,7 @@ migrate = Migrate(app, db)
 
 # Set the SQLAlchemy Database URI
 # Replace with your actual PostgreSQL URI when ready
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://username:password@hostname:port/database_name'  # Example URI
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://darkroomdatabase_user:KxMwejXXBjMiztxk7JLASeWmXyeg77KS@dpg-cslikbbv2p9s7386jhcg-a.oregon-postgres.render.com/darkroomdatabase'  # Example URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Define a basic route
