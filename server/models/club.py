@@ -3,7 +3,7 @@ from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.sql import func
 
 class Club(db.Model,SerializerMixin):
-    __tablename__ = 'movie_clubs'
+    __tablename__ = 'clubs'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
