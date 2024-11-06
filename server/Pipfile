@@ -13,7 +13,7 @@ flask-restful = "*"
 flask-sqlalchemy = "*"
 flask-cors = "*"
 flask-migrate = "*"
-sqlalchemy-serializer = "*"
+sqlalchemy-serializer = "==1.4.12"
 
 [dev-packages]
 
