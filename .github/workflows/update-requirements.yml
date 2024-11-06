@@ -21,30 +21,32 @@ jobs:
       - name: Check directory contents
         run: |
           echo "Current directory contents:"
-          ls -la  # List contents of the current directory to confirm the presence of requirements.txt
+          ls -la
+        working-directory: server  # List contents of the server directory
 
       - name: Install dependencies
         run: |
-          cd server
           python -m pip install --upgrade pip
-          pip install -r requirements.txt  # Ensure requirements.txt is in the current directory
+          pip install -r requirements.txt
+        working-directory: server
 
       - name: Update requirements.txt
         run: |
-          cd server
-          pip freeze > requirements.txt  # This will update requirements.txt in the root directory
+          pip freeze > requirements.txt
+        working-directory: server
 
       - name: Check updated requirements.txt
         run: |
           echo "Updated requirements.txt contents:"
-          cat requirements.txt  # Display contents to confirm changes
+          cat requirements.txt
+        working-directory: server
 
       - name: Commit changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add requirements.txt
+          git add server/requirements.txt  # Path includes server directory
           git commit -m "Update requirements.txt" || echo "No changes to commit"
-          git push origin main  # Push changes back to the main branch
+          git push origin main
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub token to push changes
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
