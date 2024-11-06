@@ -3,20 +3,18 @@ from flask_restful import Api, Resource, reqparse
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_migrate import Migrate
+from models import club,comment,db, follow,movie,post,rating,user,userclub
 import os
 
 app = Flask(__name__)
-# api = Api(app)
-# CORS(app)
+api = Api(app)
+CORS(app)
 
-# # Initialize SQLAlchemy
-# db = SQLAlchemy(app)
-# migrate = Migrate(app, db)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://darkroomdatabase_user:KxMwejXXBjMiztxk7JLASeWmXyeg77KS@dpg-cslikbbv2p9s7386jhcg-a.oregon-postgres.render.com/darkroomdatabase'  # Example URI
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# # Set the SQLAlchemy Database URI
-# # Replace with your actual PostgreSQL URI when ready
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://darkroomdatabase_user:KxMwejXXBjMiztxk7JLASeWmXyeg77KS@dpg-cslikbbv2p9s7386jhcg-a.oregon-postgres.render.com/darkroomdatabase'  # Example URI
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+migrate = Migrate(app, db)
+db.init_app(app)
 
 # Define a basic route
 @app.route('/')
