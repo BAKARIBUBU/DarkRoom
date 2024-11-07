@@ -3,7 +3,6 @@ from flask_restful import Api, Resource, reqparse
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_migrate import Migrate
-from models import club,comment, follow,movie,post,rating,user,userclub
 from models.db import db  # Import db directly
 import os
 
