@@ -20,7 +20,7 @@ db.init_app(app)
 # Define a basic route
 @app.route('/')
 def home():
-    return "Hello, Render! Your Flask app is running."
+    return "Hello, Render! Your Flask app is running. welcome back"
 
 # Run the app with the appropriate port
 if __name__ == '__main__':
