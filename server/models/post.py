@@ -9,8 +9,8 @@ class Post(db.Model,SerializerMixin):
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    movie_title = db.Column(db.String, nullable=False)
     movie_id = db.Column(db.Integer, db.ForeignKey('movies.id'))
+    club_id = db.Column(db.Integer, db.ForeignKey('clubs.id'), nullable=True)
     content = db.Column(db.String)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now(), nullable=False)

@@ -1,21 +1,13 @@
 from flask import Flask, request, jsonify,make_response,session
 from flask_restful import Api, Resource, reqparse
 # from flask_sqlalchemy import SQLAlchemy
-from models.club import Club
-from models.comment import Comment
-from models.follow import Follow
-from models.movie import Movie
-from models.post import Post
-from models.rating import Rating
-from models.userclub import UserClub
-from models.user import User
-from flask_cors import CORS
-from flask_migrate import Migrate
-from models.db import db  # Import db directly
+ # Import db directly
 # from flask_bcrypt import Bcrypt
+from models import db,Club,Comment,Follow,Movie,Post,Rating,User,UserClub
 from flask_jwt_extended import JWTManager,jwt_required, create_access_token, get_jwt_identity
 import os
-
+from flask_cors import CORS
+from flask_migrate import Migrate
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
