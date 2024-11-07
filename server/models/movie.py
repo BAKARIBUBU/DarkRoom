@@ -4,6 +4,8 @@ from sqlalchemy_serializer import SerializerMixin
 class Movie(db.Model,SerializerMixin):
     __tablename__ = 'movies'
 
+    serialize_rules = ('-posts','-ratings',)
+
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
     genre = db.Column(db.String)

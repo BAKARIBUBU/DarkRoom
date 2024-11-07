@@ -5,7 +5,7 @@ from sqlalchemy.sql import func
 class Post(db.Model,SerializerMixin):
     __tablename__ = 'posts'
 
-    serialize_rules=('-user_id','-movie_id',)
+    serialize_rules=('-user_id','-movie_id','comments','movie',)
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
