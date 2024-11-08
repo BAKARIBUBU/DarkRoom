@@ -5,7 +5,7 @@ from sqlalchemy.sql import func
 class Club(db.Model,SerializerMixin):
     __tablename__ = 'clubs'
 
-    serialize_rules = ('-posts','-users')
+    serialize_rules = ('-posts','-users',)
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
