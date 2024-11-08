@@ -6,14 +6,19 @@ from flask_restful import Api, Resource, reqparse
 from models import db,Club,Comment,Follow,Movie,Post,Rating,User,UserClub
 from flask_jwt_extended import JWTManager,jwt_required, create_access_token, get_jwt_identity
 import os
+from dotenv import load_dotenv
+
 from flask_cors import CORS
 from flask_migrate import Migrate
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://darkroomdatabase_user:KxMwejXXBjMiztxk7JLASeWmXyeg77KS@dpg-cslikbbv2p9s7386jhcg-a.oregon-postgres.render.com/darkroomdatabase'  # Example URI
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://darkroomdatabase_user:KxMwejXXBjMiztxk7JLASeWmXyeg77KS@dpg-cslikbbv2p9s7386jhcg-a.oregon-postgres.render.com/darkroomdatabase'  # Example URI
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///movie.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+load_dotenv()
 
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 
@@ -32,47 +37,75 @@ jwt = JWTManager(app)
 class UsersResource(Resource):
     def get(self):
         users = [user.to_dict(rules=('-posts','-comments','-ratings','-clubs',)) for user in User.query.all()]
-        return make_response(jsonify(users), 200)
+        return jsonify(users), 200
+        # return make_response(jsonify(users), 200)
 
     def post(self):
         data = request.get_json()
-        new_user = User(name=data['name'], email=data['email'])
+        new_user = User(name=data['username'], email=data['email'])
         db.session.add(new_user)
         db.session.commit()
-        return make_response(jsonify(new_user.to_dict()), 201)
+        return jsonify(new_user.to_dict()), 201
+        # return make_response(jsonify(new_user.to_dict()), 201)
 
 api.add_resource(UsersResource, '/users')
 
 class UserByID(Resource):
     def get(self, id):
         user = User.query.filter_by(id=id).first()
-
         if user is None:
-            return make_response({"error": "User not found"}, 404)
+            return jsonify({"error": "User not found"}), 404
 
-        response_dict = user.to_dict()
+        # if user is None:
+        #     return make_response({"error": "User not found"}, 404)
+        return jsonify(user.to_dict()), 200
+    
 
-        response = make_response(
-            response_dict,
-            200,
-        )
+        # response_dict = user.to_dict()
 
-        return response
+        # response = make_response(
+        #     response_dict,
+        #     200,
+        # )
+
+        # return response
     
 
     def patch(self, id):
-        record = User.query.filter_by(id=id).first()
-        for attr in request.form:
-            setattr(record, attr, request.form[attr])
-        db.session.add(record)
-        db.session.commit()
-        return make_response(record.to_dict(), 200)
+    #     record = User.query.filter_by(id=id).first()
+    #     if not record:
+    #         return jsonify({"error": "User not found"}), 404
+    #     for attr in request.form:
+    #         setattr(record, attr, request.form[attr])
+    #     db.session.add(record)
+    #     db.session.commit()
+    #     return make_response(record.to_dict(), 200)
 
-    def delete(self, id):
-        record = User.query.filter_by(id=id).first()
-        db.session.delete(record)
+        user = User.query.filter_by(id=id).first()
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+        
+        data = request.get_json()
+        for key, value in data.items():
+            setattr(user, key, value)
+        
         db.session.commit()
-        return make_response({"message": "record successfully deleted"}, 200)
+        return jsonify(user.to_dict()), 200
+    
+    def delete(self, id):
+        user = User.query.filter_by(id=id).first()
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+        
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({"message": "User successfully deleted"}), 200
+
+    # def delete(self, id):
+    #     record = User.query.filter_by(id=id).first()
+    #     db.session.delete(record)
+    #     db.session.commit()
+    #     return make_response({"message": "record successfully deleted"}, 200)
 
 api.add_resource(UserByID, '/users/<int:id>')
 
@@ -82,16 +115,19 @@ class UserRegistration(Resource):
         data = request.get_json()
 
         # Validate that required fields are in the request
-        if not data or 'name' not in data or 'email' not in data or 'password' not in data:
-            return jsonify({'message': 'Missing required fields'}), 400
+        if not data or 'username' not in data or 'email' not in data or 'password' not in data:
+            return {'message': 'Missing required fields'}, 400
+            # return jsonify({'message': 'Missing required fields'}), 400
 
         # Check if the user already exists
         existing_user = User.query.filter_by(email=data['email']).first()
         if existing_user:
-            return jsonify({'message': 'User with this email already exists'}), 400
+            return {'message': 'User with this email already exists'}, 400
+            # return jsonify({'message': 'User with this email already exists'}), 400
+            
 
         # Create a new user and hash the password
-        new_user = User(name=data['name'], email=data['email'])
+        new_user = User(username=data['username'], email=data['email'])
         new_user.password = data['password']  # Assuming the password setter hashes the password
         db.session.add(new_user)
         db.session.commit()
@@ -100,11 +136,16 @@ class UserRegistration(Resource):
         access_token = create_access_token(identity=new_user.id)
 
         # Return user data along with JWT token
-        return jsonify({
+        return {
             'message': 'User registered successfully',
             'user': new_user.to_dict(),  # Assuming you have a `to_dict` method on User
             'access_token': access_token  # Return the token
-        }), 201
+        }, 201
+        # return jsonify({
+        #     'message': 'User registered successfully',
+        #     'user': new_user.to_dict(),  # Assuming you have a `to_dict` method on User
+        #     'access_token': access_token  # Return the token
+        # }), 201
 
 api.add_resource(UserRegistration, '/register')
 
@@ -120,10 +161,10 @@ class Login(Resource):
         if user and user.check_password(password):  # Assuming `check_password` method is defined on the User model
             # Create an access token (JWT)
             access_token = create_access_token(identity=user.id)  # The identity is the user_id
-            return jsonify({
+            return {
                 'access_token': access_token,
                 'message': 'Login successful'
-            }), 200
+            }, 200
         else:
             return {'message': 'Invalid credentials'}, 401
         
@@ -132,7 +173,7 @@ api.add_resource(Login, '/login')
 class Logout(Resource):
     def post(self):
         # Log the user out by simply returning a message, client-side is responsible for removing the token
-        return jsonify(message="Logged out successfully"), 200
+        return {'message':"Logged out successfully"}, 200
 
 api.add_resource(Logout, '/logout')
 # class UserRegistration(Resource):
