@@ -23,7 +23,10 @@ class User(db.Model,SerializerMixin):
     posts = db.relationship('Post', back_populates='user', cascade='all, delete-orphan')
     comments = db.relationship('Comment', back_populates='user', cascade='all, delete-orphan')
     ratings = db.relationship('Rating', back_populates='user', cascade='all, delete-orphan')
-    clubs = db.relationship('Club', secondary='club_users', back_populates='users')
+    clubs = db.relationship('ClubUser',back_populates='users')
+    # clubs = db.relationship('Club', secondary='club_users', back_populates='users')
+    followers = db.relationship('Follow', foreign_keys='Follow.followed_id', back_populates='followed')
+    following = db.relationship('Follow', foreign_keys='Follow.follower_id', back_populates='follower')
 
     @hybrid_property
     def password(self):

@@ -16,4 +16,5 @@ class Club(db.Model,SerializerMixin):
 
 
     posts = db.relationship('Post', back_populates='club', cascade="all, delete-orphan")
-    users = db.relationship('User', secondary='club_users', back_populates='clubs')    
+    users = db.relationship('UserClub',back_populates='clubs')
+    # users = db.relationship('User', secondary='club_users', back_populates='clubs')    
