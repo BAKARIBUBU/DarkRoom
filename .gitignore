@@ -23,3 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 .env
+k.txt
+Pipfile
+Pipfile.lock
