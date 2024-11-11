@@ -6,7 +6,6 @@ from models import db,Club,Comment,Follow,Movie,Post,Rating,User,UserClub
 from flask_jwt_extended import JWTManager,jwt_required, create_access_token, get_jwt_identity
 import os
 
-
 from flask_cors import CORS
 from flask_migrate import Migrate
 app = Flask(__name__)
