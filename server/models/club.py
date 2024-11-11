@@ -12,7 +12,7 @@ class Club(db.Model,SerializerMixin):
     description = db.Column(db.String)
     members_num = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=False)
-    updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now(), nullable=False)
+    updated_at = db.Column(db.DateTime(timezone=True), default=func.now(),onupdate=func.now(), nullable=False)
 
 
     posts = db.relationship('Post', back_populates='club', cascade="all, delete-orphan")
