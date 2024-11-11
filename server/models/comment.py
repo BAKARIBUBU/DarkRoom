@@ -5,7 +5,7 @@ from sqlalchemy.sql import func
 class Comment(db.Model,SerializerMixin):
     __tablename__ = 'comments'
 
-    serialize_rules = ('-post_id','-user_id',)
+    serialize_rules = ('-post','-user',)
     
     id = db.Column(db.Integer, primary_key=True)
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
