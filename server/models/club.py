@@ -5,7 +5,7 @@ from sqlalchemy.sql import func
 class Club(db.Model,SerializerMixin):
     __tablename__ = 'clubs'
 
-    serialize_rules=('-posts','-users',)
+    serialize_rules=('-posts','-club_users',)
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
@@ -17,4 +17,4 @@ class Club(db.Model,SerializerMixin):
 
     posts = db.relationship('Post', back_populates='club', cascade="all, delete-orphan")
     # users = db.relationship('User', secondary='club_users', back_populates='clubs')    
-    club_users= db.relationship('UserClub', back_populates = 'club')
+    club_users= db.relationship('UserClub', back_populates = 'club',cascade='all, delete-orphan')
