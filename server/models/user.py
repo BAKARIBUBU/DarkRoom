@@ -26,7 +26,7 @@ class User(db.Model,SerializerMixin):
     # clubs = db.relationship('Club', secondary='club_users', back_populates='users')
     followers = db.relationship('Follow', foreign_keys='Follow.followed_id', back_populates='followed', cascade='all, delete-orphan')
     following = db.relationship('Follow', foreign_keys='Follow.follower_id', back_populates='follower', cascade='all, delete-orphan')
-    club_users= db.relationship('UserClub', back_populates = 'user')
+    club_users= db.relationship('UserClub', back_populates = 'user',cascade='all, delete-orphan')
 
 
     # def to_dict(self):
