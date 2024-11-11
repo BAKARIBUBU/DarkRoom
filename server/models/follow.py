@@ -6,6 +6,7 @@ class Follow(db.Model,SerializerMixin):
     __tablename__ = 'follows'
 
     serialize_rules=('-follower_id','-followed_id',)
+    
     id = db.Column(db.Integer, primary_key=True)
     follower_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     followed_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)

@@ -6,6 +6,7 @@ class Comment(db.Model,SerializerMixin):
     __tablename__ = 'comments'
 
     serialize_rules = ('-post_id','-user_id','-post','-user',)
+    
     id = db.Column(db.Integer, primary_key=True)
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)

@@ -21,6 +21,7 @@ from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.sql import func
 
 class UserClub(db.Model,SerializerMixin):
+    
     __tablename__ = 'club_users'
 
     serialize_rules = ('-user_id','-club',)
@@ -31,4 +32,5 @@ class UserClub(db.Model,SerializerMixin):
 
     club = db.relationship('Club', back_populates='club_users')
     user = db.relationship('User', back_populates='club_users')
+
 
