@@ -5,7 +5,6 @@ from sqlalchemy.orm.exc import NoResultFound
 from models import db,Club,Comment,Follow,Movie,Post,Rating,User,UserClub
 from flask_jwt_extended import JWTManager,jwt_required, create_access_token, get_jwt_identity
 import os
-from datetime import datetime
 
 from flask_cors import CORS
 from flask_migrate import Migrate
@@ -221,9 +220,8 @@ class ClubResource(Resource):
         # if not user:
         #     return jsonify({'message': 'User not found', 'status': 404})
 
-        # # Create a new UserClub to associate the user with the club
         user_club = UserClub(user_id=user_id, club=new_club)
-        db.session.add(user_club)  # Add the UserClub association
+        db.session.add(user_club)  
 
         db.session.add(new_club)
         db.session.commit()
