@@ -5,6 +5,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from models import db,Club,Comment,Follow,Movie,Post,Rating,User,UserClub
 from flask_jwt_extended import JWTManager,jwt_required, create_access_token, get_jwt_identity
 import os
+from datetime import datetime
 
 from flask_cors import CORS
 from flask_migrate import Migrate
@@ -38,7 +39,7 @@ class UsersResource(Resource):
 
     def post(self):
         data = request.get_json()
-        new_user = User(name=data['username'], email=data['email'])
+        new_user = User(username=data['username'], email=data['email'])
         db.session.add(new_user)
         db.session.commit()
         return jsonify({'message': 'User created successfully', 'status': 201, 'data': new_user.to_dict()})
@@ -214,7 +215,15 @@ class ClubResource(Resource):
             members_num=data.get('members_num', 0)
         )
 
-        new_club.users.append(user_id)
+        # new_club.club_users.append(user_id)
+        #     # Find the user by user_id
+        # user = User.query.get(user_id)
+        # if not user:
+        #     return jsonify({'message': 'User not found', 'status': 404})
+
+        # # Create a new UserClub to associate the user with the club
+        user_club = UserClub(user_id=user_id, club=new_club)
+        db.session.add(user_club)  # Add the UserClub association
 
         db.session.add(new_club)
         db.session.commit()
@@ -240,7 +249,7 @@ class ClubByID(Resource):
         if club is None:
             return jsonify({'message': 'Club not found', 'status': 404})
 
-        if user_id not in [user.id for user in club.users]:
+        if user_id not in [user_club.user_id for user_club in club.club_users]:
             return jsonify({'message': 'Unauthorized to edit this club', 'status': 403})
 
         data = request.get_json()
@@ -261,7 +270,7 @@ class ClubByID(Resource):
         if club is None:
             return jsonify({'message': 'Club not found', 'status': 404})
 
-        if user_id not in [user.id for user in club.users]:
+        if user_id not in [user_club.user_id for user_club in club.club_users]:
             return jsonify({'message': 'Unauthorized to delete this club', 'status': 403})
 
         db.session.delete(club)
