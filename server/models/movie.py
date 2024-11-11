@@ -12,7 +12,7 @@ class Movie(db.Model,SerializerMixin):
     description = db.Column(db.String)
     release_year = db.Column(db.Integer)
     poster_url = db.Column(db.String)
-    video_url = db.Column(db.String)
+    # video_url = db.Column(db.String)
 
     posts = db.relationship('Post', back_populates='movie', cascade='all, delete-orphan')
     ratings = db.relationship('Rating', back_populates='movie', cascade='all, delete-orphan')

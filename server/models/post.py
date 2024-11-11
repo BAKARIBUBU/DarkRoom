@@ -7,13 +7,7 @@ from models import Movie
 class Post(db.Model, SerializerMixin):
     __tablename__ = 'posts'
 
-    serialize_rules = ('-user_id', '-movie_id','-club_id','-comments','-movie', '-club_id', '-comments', '-movies')  # Exclude unnecessary fields
-
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    movie_id = db.Column(db.Integer, db.ForeignKey('movies.id'))
-    club_id = db.Column(db.Integer, db.ForeignKey('clubs.id'), nullable=False)
-    serialize_rules = ('-user_id', '-movie_id', '-club_id', '-comments', '-movies')  # Exclude unnecessary fields
+    serialize_rules = ('-user_id', '-movie_id','-club_id','-comments','-movie', '-club_id', '-comments', '-movies')
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
