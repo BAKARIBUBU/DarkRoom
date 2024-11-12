@@ -15,6 +15,7 @@ flask-cors = "*"
 flask-migrate = "*"
 sqlalchemy-serializer = "==1.4.12"
 ipdb = "*"
+pytest = "*"
 
 [dev-packages]
 
