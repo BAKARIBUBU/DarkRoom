@@ -16,7 +16,7 @@ class Club(db.Model, SerializerMixin):
     updated_at = db.Column(db.DateTime(timezone=True), default=func.now(), onupdate=func.now(), nullable=False)
 
     posts = db.relationship('Post', back_populates='club', cascade="all, delete-orphan")
-    club_users = db.relationship('User Club', back_populates='club', cascade='all, delete-orphan')
+    club_users = db.relationship('UserClub', back_populates='club', cascade='all, delete-orphan')
 
 
 # i ddaed the profil_imgae collumn.
