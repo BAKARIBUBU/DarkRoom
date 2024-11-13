@@ -16,7 +16,9 @@ CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///darkroom.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
+# I commenented line 20 and replaced with inhouse secretkey
+# app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
+app.config['JWT_SECRET_KEY'] = 'EdwinSharonBakariBarkleyFavoured'
 
 migrate = Migrate(app, db)
 db.init_app(app)
