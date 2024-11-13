@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import login from '../images/login.jpeg'
 
 
 const LoginPage = () => {
@@ -41,7 +40,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="login-page bg- bg-no-repeat bg-cover bg-center bg-fixed flex items-center justify-center h-screen w-[200vh]">style={{backgroundImage:`url(${login})`}}
+    <div className="login-page bg-[url('src/images/login.jpeg')] bg-no-repeat bg-cover bg-center bg-fixed flex items-center justify-center h-screen w-[200vh]">
       {isRegistering ? (
         <div className="bg-black bg-opacity-70 p-5 rounded text-center text-white w-[300px] mx-auto">
           <h2>Sign Up</h2>
