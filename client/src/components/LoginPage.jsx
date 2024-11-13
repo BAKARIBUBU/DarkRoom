@@ -46,21 +46,21 @@ const LoginPage = () => {
           <h2>Sign Up</h2>
           <input
             type="text"
-            className=' w-full p-2.5 my-2 border-none rounded bg-white'
+            className=' text-black w-full p-2.5 my-2 border-none rounded bg-white'
             placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <input
             type="email"
-            className=' w-full p-2.5 my-2 border-none rounded bg-white'
+            className=' text-black w-full p-2.5 my-2 border-none rounded bg-white'
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <input
             type="password"
-            className=' w-full p-2.5 my-2 border-none rounded bg-white'
+            className=' text-black w-full p-2.5 my-2 border-none rounded bg-white'
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -75,14 +75,14 @@ const LoginPage = () => {
           <h2 mb-5 text-white>Login</h2>
           <input
             type="email"
-            className=' w-full p-2.5 my-2 border-none rounded bg-white'
+            className=' text-black w-full p-2.5 my-2 border-none rounded bg-white'
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <input
             type="password"
-            className=' w-full p-2.5 my-2 border-none rounded bg-white'
+            className=' text-black w-full p-2.5 my-2 border-none rounded bg-white'
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
