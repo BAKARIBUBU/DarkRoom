@@ -208,11 +208,18 @@ class ClubResource(Resource):
         if not data.get('name'):
             return jsonify({'message': 'Club name is required', 'status': 400})
 
+        #   THIS SHARONES WORK
+        # new_club = Club(
+        #     name=data['name'],
+        #     description=data.get('description', ''),
+        #     members_num=data.get('members_num', 0)
+        # )
         new_club = Club(
-            name=data['name'],
-            description=data.get('description', ''),
-            members_num=data.get('members_num', 0)
-        )
+              name=data['name'],
+              description=data.get('description', ''),
+              members_num=data.get('members_num', 0),
+              profile_image=data.get('profile_image', 'https://www.shutterstock.com/image-vector/silhouette-heads-faces-profile-multiethnic-600nw-2161769995.jpg')  # Use user-provided image or default
+    )
 
         # new_club.club_users.append(user_id)
         #     # Find the user by user_id
@@ -221,7 +228,7 @@ class ClubResource(Resource):
         #     return jsonify({'message': 'User not found', 'status': 404})
 
         user_club = UserClub(user_id=user_id, club=new_club)
-        db.session.add(user_club)  
+        db.session.add(user_club)
 
         db.session.add(new_club)
         db.session.commit()
@@ -310,10 +317,10 @@ api.add_resource(PostResource, '/posts')
 class PostByID(Resource):
     def get(self, id):
         post = Post.query.filter_by(id=id).first()
-        
+
         if post is None:
             return jsonify({'message': 'Post not found', 'status': 404})
-        
+
         return jsonify({'message': 'Post fetched successfully', 'status': 200, 'data': post.to_dict()})
 
     # PATCH: Update an existing post by its ID
@@ -360,7 +367,7 @@ api.add_resource(PostByID, '/posts/<int:id>')
 
 class RatingResource(Resource):
     def get(self):
-        movie_id = request.args.get('movie_id')  
+        movie_id = request.args.get('movie_id')
         if movie_id:
             ratings = Rating.query.filter_by(movie_id=movie_id).all()
         else:
@@ -394,7 +401,7 @@ class RatingResource(Resource):
 
         return jsonify({'message': 'Rating created successfully', 'status': 201, 'data': new_rating.to_dict()})
 
-api.add_resource(RatingResource, '/ratings') 
+api.add_resource(RatingResource, '/ratings')
 
 class RatingByID(Resource):
     def get(self, id):
@@ -602,21 +609,21 @@ class AddUserToClub(Resource):
     @jwt_required()  # Ensure the user is logged in
     def post(self):
         data = request.get_json()
-        
+
         user_id = data.get('user_id')
         club_id = data.get('club_id')
-        
+
         if not user_id or not club_id:
             return jsonify({'message': 'user_id and club_id are required', 'status': 400})
-        
+
         current_user_id = get_jwt_identity()
 
         if current_user_id != user_id:
             return jsonify({'message': 'You can only add yourself to a club', 'status': 403})
-        
+
         user = User.query.get(user_id)
         club = Club.query.get(club_id)
-        
+
         if not user:
             return jsonify({'message': 'User not found', 'status': 404})
         if not club:
@@ -625,7 +632,7 @@ class AddUserToClub(Resource):
         existing_user_club = UserClub.query.filter_by(user_id=user_id, club_id=club_id).first()
         if existing_user_club:
             return jsonify({'message': 'User is already in this club', 'status': 400})
-        
+
         user_club = UserClub(user_id=user_id, club_id=club_id)
         db.session.add(user_club)
         db.session.commit()
@@ -642,15 +649,15 @@ class RemoveUserFromClub(Resource):
 
         if current_user_id != user_id:
             return jsonify({'message': 'You can only remove yourself from a club', 'status': 403})
-        
+
         user_club = UserClub.query.filter_by(user_id=user_id, club_id=club_id).first()
-        
+
         if not user_club:
             return jsonify({'message': 'User is not in this club', 'status': 404})
-        
+
         db.session.delete(user_club)
         db.session.commit()
-        
+
         return jsonify({'message': 'User removed from club successfully', 'status': 200})
 
 api.add_resource(RemoveUserFromClub, '/clubs/remove_user/<int:user_id>/<int:club_id>')
@@ -659,10 +666,10 @@ api.add_resource(RemoveUserFromClub, '/clubs/remove_user/<int:user_id>/<int:club
 class ClubsForUser(Resource):
     def get(self, user_id):
         clubs = Club.query.join(UserClub).filter(UserClub.user_id == user_id).all()
-        
+
         if not clubs:
             return jsonify({'message': 'User is not a member of any club', 'status': 404})
-        
+
         return jsonify({'message': 'Clubs fetched successfully', 'status': 200, 'data': [club.to_dict() for club in clubs]})
 
 api.add_resource(ClubsForUser, '/users/<int:user_id>/clubs')
@@ -671,10 +678,10 @@ api.add_resource(ClubsForUser, '/users/<int:user_id>/clubs')
 class UsersInClub(Resource):
     def get(self, club_id):
         users = User.query.join(UserClub).filter(UserClub.club_id == club_id).all()
-        
+
         if not users:
             return jsonify({'message': 'No users in this club', 'status': 404})
-        
+
         return jsonify({'message': 'Users in club fetched successfully', 'status': 200, 'data': [user.to_dict() for user in users]})
 
 api.add_resource(UsersInClub, '/clubs/<int:club_id>/users')
