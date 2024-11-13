@@ -12,7 +12,8 @@ const App = () => {
         {/* <h1>Darkroom App</h1> */}
         <Navbar />
         <Routes>
-                   <Route path="/home" element={<HomePage />} />
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/home" element={<HomePage />} />
                     <Route path="/login" element={<LoginPage />} />
         </Routes>
         < Footer/>
