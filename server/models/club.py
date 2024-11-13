@@ -19,7 +19,7 @@ class Club(db.Model, SerializerMixin):
     club_users = db.relationship('User Club', back_populates='club', cascade='all, delete-orphan')
 
 
-
+# i ddaed the profil_imgae collumn.
 
 
 # THE CUURENT CLUB.PY MADE BY EDWIN
