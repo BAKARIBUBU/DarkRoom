@@ -1,6 +1,7 @@
 // src/components/DashboardSidebar.jsx
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { FaUser, FaSignInAlt, FaUserPlus, FaFilm, FaEye, FaUsers, FaBell } from 'react-icons/fa';
 
 const DashboardSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,152 +12,49 @@ const DashboardSidebar = () => {
 
   return (
     <>
-      {/* Sidebar for larger screens (md and up) */}
+      {/* Sidebar for larger screens */}
       <div
-        className={`bg-gray-800 text-white w-64 h-screen p-6 fixed md:block transition-all duration-300 ease-in-out transform ${
+        className={`bg-gray-900 text-gray-200 w-72 h-screen p-6 fixed top-0 left-0 transform ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:translate-x-0`}
+        } md:translate-x-0 transition-transform duration-300 ease-in-out shadow-lg rounded-r-lg`}
       >
-        <h2 className="text-2xl font-bold mb-6">Dashboard</h2>
+        <h2 className="text-3xl font-extrabold mb-8 text-center">Dashboard</h2>
 
-        <div className="menu-section mb-6">
-          <h3 className="text-xl font-semibold mb-4">User Account</h3>
-          <ul>
-            <li>
-              <Link
-                to="/profile"
-                className="block py-2 px-4 rounded-md hover:bg-gray-700 transition duration-300"
-              >
-                View & Update Profile
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/login"
-                className="block py-2 px-4 rounded-md hover:bg-gray-700 transition duration-300"
-              >
-                Login
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/signup"
-                className="block py-2 px-4 rounded-md hover:bg-gray-700 transition duration-300"
-              >
-                Create Account
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        <div className="menu-section mb-6">
-          <h3 className="text-xl font-semibold mb-4">Movies & Posts</h3>
-          <ul>
-            <li>
-              <Link
-                to="/create-post"
-                className="block py-2 px-4 rounded-md hover:bg-gray-700 transition duration-300"
-              >
-                Create & Share Movie Posts
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/posts"
-                className="block py-2 px-4 rounded-md hover:bg-gray-700 transition duration-300"
-              >
-                View & Interact with Posts
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/movies-tracking"
-                className="block py-2 px-4 rounded-md hover:bg-gray-700 transition duration-300"
-              >
-                Track Movies Watched
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        <div className="menu-section mb-6">
-          <h3 className="text-xl font-semibold mb-4">Movie Clubs</h3>
-          <ul>
-            <li>
-              <Link
-                to="/clubs/join"
-                className="block py-2 px-4 rounded-md hover:bg-gray-700 transition duration-300"
-              >
-                Join Movie Clubs
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/clubs/create"
-                className="block py-2 px-4 rounded-md hover:bg-gray-700 transition duration-300"
-              >
-                Create & Manage Movie Clubs
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/clubs"
-                className="block py-2 px-4 rounded-md hover:bg-gray-700 transition duration-300"
-              >
-                View Clubs & Communities
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        <div className="menu-section mb-6">
-          <h3 className="text-xl font-semibold mb-4">Social & Interaction</h3>
-          <ul>
-            <li>
-              <Link
-                to="/followers"
-                className="block py-2 px-4 rounded-md hover:bg-gray-700 transition duration-300"
-              >
-                Follow/Unfollow Members
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/posts/review"
-                className="block py-2 px-4 rounded-md hover:bg-gray-700 transition duration-300"
-              >
-                Rate/Comment on Posts
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/posts/details"
-                className="block py-2 px-4 rounded-md hover:bg-gray-700 transition duration-300"
-              >
-                View Post Details
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        <div className="menu-section mb-6">
-          <h3 className="text-xl font-semibold mb-4">Notifications</h3>
-          <ul>
-            <li>
-              <Link
-                to="/notifications"
-                className="block py-2 px-4 rounded-md hover:bg-gray-700 transition duration-300"
-              >
-                View Notifications
-              </Link>
-            </li>
-          </ul>
+        <div className="space-y-4">
+          <Link to="/profile" className="flex items-center p-3 hover:bg-gray-700 rounded-lg transition-colors duration-200">
+            <FaUser className="mr-3 text-lg" />
+            <span>View & Update Profile</span>
+          </Link>
+          <Link to="/login" className="flex items-center p-3 hover:bg-gray-700 rounded-lg transition-colors duration-200">
+            <FaSignInAlt className="mr-3 text-lg" />
+            <span>Login</span>
+          </Link>
+          <Link to="/signup" className="flex items-center p-3 hover:bg-gray-700 rounded-lg transition-colors duration-200">
+            <FaUserPlus className="mr-3 text-lg" />
+            <span>Create Account</span>
+          </Link>
+          <Link to="/movies-tracking" className="flex items-center p-3 hover:bg-gray-700 rounded-lg transition-colors duration-200">
+            <FaFilm className="mr-3 text-lg" />
+            <span>Track Movies</span>
+          </Link>
+          <Link to="/posts" className="flex items-center p-3 hover:bg-gray-700 rounded-lg transition-colors duration-200">
+            <FaEye className="mr-3 text-lg" />
+            <span>View Posts</span>
+          </Link>
+          <Link to="/clubs" className="flex items-center p-3 hover:bg-gray-700 rounded-lg transition-colors duration-200">
+            <FaUsers className="mr-3 text-lg" />
+            <span>Movie Clubs</span>
+          </Link>
+          <Link to="/notifications" className="flex items-center p-3 hover:bg-gray-700 rounded-lg transition-colors duration-200">
+            <FaBell className="mr-3 text-lg" />
+            <span>Notifications</span>
+          </Link>
         </div>
       </div>
 
       {/* Sidebar toggle button for smaller screens */}
-      <div
-        className="md:hidden fixed top-4 left-4 p-3 bg-gray-800 text-white rounded-full"
+      <button
+        className="md:hidden fixed top-4 left-4 p-3 bg-gray-800 text-gray-200 rounded-full shadow-lg"
         onClick={toggleSidebar}
       >
         <svg
@@ -182,7 +80,7 @@ const DashboardSidebar = () => {
             />
           )}
         </svg>
-      </div>
+      </button>
     </>
   );
 };

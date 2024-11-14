@@ -64,9 +64,14 @@ class UserByID(Resource):
 
         data = request.get_json()
 
-    # Update the user fields based on the incoming data
+        # If the request includes a new profile image URL, update the profile_picture field
+        if 'profile_picture' in data:
+            record.profile_picture = data['profile_picture']
+
+        # Update other user fields based on the incoming data
         for attr, value in data.items():
-          setattr(record, attr, value)
+            if attr != 'profile_picture':  # Skip profile_picture as it's already handled
+                setattr(record, attr, value)
 
         db.session.add(record)
         db.session.commit()
@@ -83,7 +88,48 @@ class UserByID(Resource):
         db.session.commit()
         return jsonify({'message': 'User successfully deleted', 'status': 200})
 
+# Register the resource with the API
 api.add_resource(UserByID, '/users/<int:id>')
+
+
+#  SHARON WORK
+# class UserByID(Resource):
+#     def get(self, id):
+#         user = User.query.filter_by(id=id).first()
+
+#         if user is None:
+#             return jsonify({'message': 'User not found', 'status': 404})
+
+#         return jsonify({'message': 'User fetched successfully', 'status': 200, 'data': user.to_dict()})
+
+#     def patch(self, id):
+#         record = User.query.filter_by(id=id).first()
+
+#         if record is None:
+#            return jsonify({'message': 'User not found', 'status': 404})
+
+#         data = request.get_json()
+
+#     # Update the user fields based on the incoming data
+#         for attr, value in data.items():
+#           setattr(record, attr, value)
+
+#         db.session.add(record)
+#         db.session.commit()
+
+#         return jsonify({'message': 'User updated successfully', 'status': 200, 'data': record.to_dict()})
+
+#     def delete(self, id):
+#         record = User.query.filter_by(id=id).first()
+
+#         if record is None:
+#             return jsonify({'message': 'User not found', 'status': 404})
+
+#         db.session.delete(record)
+#         db.session.commit()
+#         return jsonify({'message': 'User successfully deleted', 'status': 200})
+
+# api.add_resource(UserByID, '/users/<int:id>')
 
 class UserRegistration(Resource):
     def post(self):
@@ -113,6 +159,7 @@ class UserRegistration(Resource):
 
 api.add_resource(UserRegistration, '/register')
 
+
 class Login(Resource):
     def post(self):
         data = request.get_json()
@@ -122,16 +169,46 @@ class Login(Resource):
         user = User.query.filter_by(email=email).first()
 
         if user and user.check_password(password):
+            # Generate the access token with user identity
             access_token = create_access_token(identity=user.id)
+
+            # Include user details in the response
             return jsonify({
                 'message': 'Login successful',
                 'status': 200,
-                'access_token': access_token
+                'access_token': access_token,
+                'user': {
+                    'id': user.id,
+                    'email': user.email,
+                    'username': user.username  # Include any other user info you'd like here
+                }
             })
 
         return jsonify({'message': 'Invalid credentials', 'status': 401})
 
 api.add_resource(Login, '/login')
+
+
+# SHARON WORK
+# class Login(Resource):
+#     def post(self):
+#         data = request.get_json()
+#         email = data.get('email')
+#         password = data.get('password')
+
+#         user = User.query.filter_by(email=email).first()
+
+#         if user and user.check_password(password):
+#             access_token = create_access_token(identity=user.id)
+#             return jsonify({
+#                 'message': 'Login successful',
+#                 'status': 200,
+#                 'access_token': access_token
+#             })
+
+#         return jsonify({'message': 'Invalid credentials', 'status': 401})
+
+# api.add_resource(Login, '/login')
 
 class Logout(Resource):
     def post(self):

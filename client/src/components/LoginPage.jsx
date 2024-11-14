@@ -20,6 +20,7 @@ const LoginPage = () => {
 
       if (response.data.status === 200) {
         localStorage.setItem('access_token', response.data.access_token);
+        localStorage.setItem('user_id', response.data.user.id); // Store user ID
         navigate('/dashboard');
       } else {
         setErrorMessage(response.data.message || 'An error occurred');
