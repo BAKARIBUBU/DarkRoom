@@ -172,7 +172,7 @@ class Login(Resource):
             # Generate the access token with user identity
             access_token = create_access_token(identity=user.id)
 
-            # Include user details in the response
+            # Include user details in the response, including profile_picture
             return jsonify({
                 'message': 'Login successful',
                 'status': 200,
@@ -180,13 +180,43 @@ class Login(Resource):
                 'user': {
                     'id': user.id,
                     'email': user.email,
-                    'username': user.username  # Include any other user info you'd like here
+                    'username': user.username,
+                    'profile_picture': user.profile_picture  # Include profile picture
                 }
             })
 
         return jsonify({'message': 'Invalid credentials', 'status': 401})
 
 api.add_resource(Login, '/login')
+
+# BAKARI THE ENDPOINT BELOW DOES NOT INCLUDE PROFILE PICTURE
+# class Login(Resource):
+#     def post(self):
+#         data = request.get_json()
+#         email = data.get('email')
+#         password = data.get('password')
+
+#         user = User.query.filter_by(email=email).first()
+
+#         if user and user.check_password(password):
+#             # Generate the access token with user identity
+#             access_token = create_access_token(identity=user.id)
+
+#             # Include user details in the response
+#             return jsonify({
+#                 'message': 'Login successful',
+#                 'status': 200,
+#                 'access_token': access_token,
+#                 'user': {
+#                     'id': user.id,
+#                     'email': user.email,
+#                     'username': user.username  # Include any other user info you'd like here
+#                 }
+#             })
+
+#         return jsonify({'message': 'Invalid credentials', 'status': 401})
+
+# api.add_resource(Login, '/login')
 
 
 # SHARON WORK
@@ -216,63 +246,180 @@ class Logout(Resource):
 
 api.add_resource(Logout, '/logout')
 
-class MovieResource(Resource):
-    def get(self):
-        movies = Movie.query.all()
-        return jsonify({'message': 'Movies fetched successfully', 'status': 200, 'data': [movie.to_dict() for movie in movies]})
 
+class MovieResource(Resource):
+    @jwt_required()
+    def get(self):
+        # Fetch movies for the authenticated user
+        user_id = get_jwt_identity()
+        movies = Movie.query.filter_by(user_id=user_id).all()
+        return jsonify({
+            'message': 'Movies fetched successfully',
+            'status': 200,
+            'data': [movie.to_dict() for movie in movies]
+        })
+
+    @jwt_required()
     def post(self):
+        # Add a new movie for the authenticated user
+        user_id = get_jwt_identity()
         data = request.get_json()
-        new_movie = Movie(
-            title=data['title'],
-            genre=data['genre'],
-            description=data['description'],
-            release_year=data['release_year'],
-            poster_url=data['poster_url']
-        )
-        db.session.add(new_movie)
-        db.session.commit()
-        return jsonify({'message': 'Movie created successfully', 'status': 201, 'data': new_movie.to_dict()})
+
+        try:
+            new_movie = Movie(
+                title=data['title'],
+                genre=data['genre'],
+                description=data['description'],
+                release_year=data['release_year'],
+                poster_url=data['poster_url'],
+                user_id=user_id  # Associate the movie with the user
+            )
+            db.session.add(new_movie)
+            db.session.commit()
+            return jsonify({
+                'message': 'Movie created successfully',
+                'status': 201,
+                'data': new_movie.to_dict()
+            })
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({
+                'message': 'An error occurred',
+                'status': 400,
+                'error': str(e)
+            })
 
 api.add_resource(MovieResource, '/movies')
 
+
 class MovieByID(Resource):
+    @jwt_required()
     def get(self, id):
-        movie = Movie.query.filter_by(id=id).first()
+        # Fetch a specific movie for the authenticated user
+        user_id = get_jwt_identity()
+        movie = Movie.query.filter_by(id=id, user_id=user_id).first()
 
         if movie is None:
             return jsonify({'message': 'Movie not found', 'status': 404})
 
-        return jsonify({'message': 'Movie fetched successfully', 'status': 200, 'data': movie.to_dict()})
+        return jsonify({
+            'message': 'Movie fetched successfully',
+            'status': 200,
+            'data': movie.to_dict()
+        })
 
+    @jwt_required()
     def patch(self, id):
-        movie = Movie.query.filter_by(id=id).first()
+        # Update a movie for the authenticated user
+        user_id = get_jwt_identity()
+        movie = Movie.query.filter_by(id=id, user_id=user_id).first()
 
         if movie is None:
             return jsonify({'message': 'Movie not found', 'status': 404})
 
         data = request.get_json()
 
-        for key, value in data.items():
-            if hasattr(movie, key):
-                setattr(movie, key, value)
+        try:
+            for key, value in data.items():
+                if hasattr(movie, key):
+                    setattr(movie, key, value)
 
-        db.session.commit()
+            db.session.commit()
+            return jsonify({
+                'message': 'Movie updated successfully',
+                'status': 200,
+                'data': movie.to_dict()
+            })
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({
+                'message': 'An error occurred',
+                'status': 400,
+                'error': str(e)
+            })
 
-        return jsonify({'message': 'Movie updated successfully', 'status': 200, 'data': movie.to_dict()})
-
+    @jwt_required()
     def delete(self, id):
-        movie = Movie.query.filter_by(id=id).first()
+        # Delete a movie for the authenticated user
+        user_id = get_jwt_identity()
+        movie = Movie.query.filter_by(id=id, user_id=user_id).first()
 
         if movie is None:
             return jsonify({'message': 'Movie not found', 'status': 404})
 
-        db.session.delete(movie)
-        db.session.commit()
-
-        return jsonify({'message': 'Movie successfully deleted', 'status': 200})
+        try:
+            db.session.delete(movie)
+            db.session.commit()
+            return jsonify({'message': 'Movie successfully deleted', 'status': 200})
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({
+                'message': 'An error occurred',
+                'status': 400,
+                'error': str(e)
+            })
 
 api.add_resource(MovieByID, '/movies/<int:id>')
+
+
+# SHARONS WORK
+# class MovieResource(Resource):
+#     def get(self):
+#         movies = Movie.query.all()
+#         return jsonify({'message': 'Movies fetched successfully', 'status': 200, 'data': [movie.to_dict() for movie in movies]})
+
+#     def post(self):
+#         data = request.get_json()
+#         new_movie = Movie(
+#             title=data['title'],
+#             genre=data['genre'],
+#             description=data['description'],
+#             release_year=data['release_year'],
+#             poster_url=data['poster_url']
+#         )
+#         db.session.add(new_movie)
+#         db.session.commit()
+#         return jsonify({'message': 'Movie created successfully', 'status': 201, 'data': new_movie.to_dict()})
+
+# api.add_resource(MovieResource, '/movies')
+
+# class MovieByID(Resource):
+#     def get(self, id):
+#         movie = Movie.query.filter_by(id=id).first()
+
+#         if movie is None:
+#             return jsonify({'message': 'Movie not found', 'status': 404})
+
+#         return jsonify({'message': 'Movie fetched successfully', 'status': 200, 'data': movie.to_dict()})
+
+#     def patch(self, id):
+#         movie = Movie.query.filter_by(id=id).first()
+
+#         if movie is None:
+#             return jsonify({'message': 'Movie not found', 'status': 404})
+
+#         data = request.get_json()
+
+#         for key, value in data.items():
+#             if hasattr(movie, key):
+#                 setattr(movie, key, value)
+
+#         db.session.commit()
+
+#         return jsonify({'message': 'Movie updated successfully', 'status': 200, 'data': movie.to_dict()})
+
+#     def delete(self, id):
+#         movie = Movie.query.filter_by(id=id).first()
+
+#         if movie is None:
+#             return jsonify({'message': 'Movie not found', 'status': 404})
+
+#         db.session.delete(movie)
+#         db.session.commit()
+
+#         return jsonify({'message': 'Movie successfully deleted', 'status': 200})
+
+# api.add_resource(MovieByID, '/movies/<int:id>')
 
 class ClubResource(Resource):
     def get(self):

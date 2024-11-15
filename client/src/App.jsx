@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import HomePage from "./components/Homepage";
@@ -7,22 +7,41 @@ import LoginPage from "./components/LoginPage";
 import SignupPage from "./components/SignupPage";
 import Dashboard from "./components/Dashboard"; // Import Dashboard component
 import ProfilePage from "./components/ProfilePage"; // Import ProfilePage component
+import Movie from "./components/Movie"; // Import Movie component
 
 const App = () => {
+  const [user, setUser ] = useState(null);
+
   // Function to check if the user is authenticated (has a valid token)
   const isAuthenticated = () => {
     const token = localStorage.getItem("access_token"); // Adjust based on your storage method
     return token && token !== ""; // You can also add additional validation, like checking the token expiry date.
   };
 
+  // Fetch user data from local storage on initial render
+  useEffect(() => {
+    const storedUser  = {
+      id: localStorage.getItem("user_id"),
+      username: localStorage.getItem("username"),
+      profile_picture: localStorage.getItem("user_profile_picture"),
+    };
+    if (storedUser .id) {
+      setUser (storedUser );
+    }
+  }, []);
+
   return (
     <Router>
-      <AppContent isAuthenticated={isAuthenticated} />
+      <AppContent
+        isAuthenticated={isAuthenticated}
+        user={user}
+        setUser ={setUser }
+      />
     </Router>
   );
 };
 
-const AppContent = ({ isAuthenticated }) => {
+const AppContent = ({ isAuthenticated, user, setUser  }) => {
   const location = useLocation(); // Get the current route location
 
   // Don't render footer on the /dashboard route
@@ -30,11 +49,11 @@ const AppContent = ({ isAuthenticated }) => {
 
   return (
     <div>
-      <Navbar />
+      <Navbar user={user} setUser ={setUser } />
       <div className="pt-20">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage onLogin={setUser } />} />
           <Route path="/signup" element={<SignupPage />} />
 
           {/* Protected Route for Dashboard */}
@@ -48,6 +67,12 @@ const AppContent = ({ isAuthenticated }) => {
             path="/profile"
             element={isAuthenticated() ? <ProfilePage userId={1} /> : <Navigate to="/login" />}
           />
+
+          {/* Protected Route for Track Movies */}
+          <Route
+            path="/movies-tracking"
+            element={isAuthenticated() ? <Movie /> : <Navigate to="/login" />}
+          />
         </Routes>
       </div>
       {/* Conditionally render the footer */}
@@ -57,10 +82,6 @@ const AppContent = ({ isAuthenticated }) => {
 };
 
 export default App;
-
-
-
-
 
 
 // // src/App.jsx

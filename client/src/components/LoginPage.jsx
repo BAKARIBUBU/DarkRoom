@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 
-const LoginPage = () => {
+const LoginPage = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -19,8 +19,20 @@ const LoginPage = () => {
       });
 
       if (response.data.status === 200) {
+        // Store user data in local storage
+        const user = {
+          id: response.data.user.id,
+          username: response.data.user.username,
+          profile_picture: response.data.user.profile_picture,
+        };
+        localStorage.setItem('user_id', user.id);
+        localStorage.setItem('username', user.username);
+        localStorage.setItem('user_profile_picture', user.profile_picture);
         localStorage.setItem('access_token', response.data.access_token);
-        localStorage.setItem('user_id', response.data.user.id); // Store user ID
+
+        // Call the onLogin callback to update the user state in the parent component
+        onLogin(user);
+
         navigate('/dashboard');
       } else {
         setErrorMessage(response.data.message || 'An error occurred');
@@ -74,21 +86,6 @@ const LoginPage = () => {
             Sign Up
           </Link>
         </p>
-
-        <div className="flex items-center mt-8">
-          <hr className="flex-grow border-t border-gray-300" />
-          <span className="px-2 text-sm text-gray-500">Or log in with</span>
-          <hr className="flex-grow border-t border-gray-300" />
-        </div>
-
-        <div className="mt-6 space-y-4">
-          <button className="flex items-center justify-center w-full py-3 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition duration-300">
-            <i className="fab fa-google mr-2 text-lg"></i> Continue with Google
-          </button>
-          <button className="flex items-center justify-center w-full py-3 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition duration-300">
-            <i className="fab fa-facebook-f mr-2 text-lg"></i> Continue with Facebook
-          </button>
-        </div>
       </div>
     </section>
   );
