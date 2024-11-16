@@ -11,7 +11,9 @@ const api = axios.create({
 export const createPostWithMovie = async (user_id, club_id, content, movie_title, movie_poster_url) => {
   try {
     const response = await api.post('/posts', { user_id, club_id, content, movie_title, movie_poster_url });
-    return response.data;
+    console.log(response);
+    
+    return response.data.data;
   } catch (error) {
     console.error('Error creating post:', error);
     throw error;
@@ -22,7 +24,7 @@ export const createPostWithMovie = async (user_id, club_id, content, movie_title
 export const getPosts = async () => {
   try {
     const response = await api.get('/posts');
-    return response.data;
+    return response.data.data;
   } catch (error) {
     console.error('Error fetching posts:', error);
     throw error;
@@ -99,3 +101,17 @@ export const createComment = async (post_id, commentData) => {
     throw error;
   }
 };
+// export const createComment = async (post_id, commentData) => {
+//   const token = localStorage.getItem('token');  // Assuming the token is stored in localStorage
+//   try {
+//     const response = await api.post(`/comments/${post_id}`, { content: commentData }, {
+//       headers: {
+//         Authorization: `Bearer ${token}`,  // Send the JWT token in the Authorization header
+//       },
+//     });
+//     return response.data.data;
+//   } catch (error) {
+//     console.error('Error creating comment:', error);
+//     throw error;
+//   }
+// };
