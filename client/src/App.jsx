@@ -1,11 +1,27 @@
-import Post from './components/Post';
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import HomePage from "./components/Homepage";
+import LoginPage from "./components/LoginPage";
 
-function App() {
+const App = () => {
   return (
-    <>
-      <Post />
-    </>
-  )
-}
+    <Router>
+      <div>
+        {/* <h1>Darkroom App</h1> */}
+        <Navbar />
+        <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/home" element={<HomePage />} />
+                    <Route path="/login" element={<LoginPage />} />
+        </Routes>
+        < Footer/>
+      </div>
+    </Router>
+  );
+};
 
-export default App
+export default App;
+
+

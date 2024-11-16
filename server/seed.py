@@ -29,20 +29,20 @@ with app.app_context():  # Ensure the whole seeding process is wrapped in app co
 
     print("Seeding Clubs...")
     Clubs = [
-        Club(name="Club1", description="This is club1", members_num="1", created_at=datetime.now(), updated_at=datetime.now()),
-        Club(name="Club2", description="This is club2", members_num="3", created_at=datetime.now(), updated_at=datetime.now()),
-        Club(name="Club3", description="This is club3", members_num="4", created_at=datetime.now(), updated_at=datetime.now()),
-        Club(name="Club4", description="This is club4", members_num="2", created_at=datetime.now(), updated_at=datetime.now()),
+        Club(name="Heroes", description="FanBase club for heroes", members_num="1", created_at=datetime.now(), updated_at=datetime.now()),
+        Club(name="Romance", description="Romance lovers", members_num="3", created_at=datetime.now(), updated_at=datetime.now()),
+        Club(name="Drama", description="Club for people suspense seekers", members_num="4", created_at=datetime.now(), updated_at=datetime.now()),
+        Club(name="Kids", description="Club for the kids", members_num="2", created_at=datetime.now(), updated_at=datetime.now()),
     ]
     db.session.add_all(Clubs)
     db.session.commit()
 
     print("Seeding Comment...")
     Comments = [
-        Comment(user_id=1, post_id=4, created_at=datetime.now(), content="music"),
-        Comment(user_id=4, post_id=2, created_at=datetime.now(), content="its the best movie ever"),
-        Comment(user_id=2, post_id=3, created_at=datetime.now(), content="good movie"),
-        Comment(user_id=3, post_id=1, created_at=datetime.now(), content="I loved it"),
+        Comment(user_id=1, post_id=4, created_at=datetime.now(), content="Superman is my fav"),
+        Comment(user_id=4, post_id=2, created_at=datetime.now(), content="I like Ben 10"),
+        Comment(user_id=2, post_id=3, created_at=datetime.now(), content="I like the movie love tacticts"),
+        Comment(user_id=3, post_id=1, created_at=datetime.now(), content="Is Queens Gambit a drama show?"),
     ]
     db.session.add_all(Comments)
     db.session.commit()
@@ -59,20 +59,34 @@ with app.app_context():  # Ensure the whole seeding process is wrapped in app co
 
     print("Seeding Movies...")
     Movies = [
-        Movie(title="Inception", genre="action", description="People fighting for power", release_year=2023, poster_url=1),
-        Movie(title="Moana", genre="animation", description="Moana saves her kingdom", release_year=2011, poster_url=3),
-        Movie(title="Underground", genre="drama", description="Fighting for the love of his life", release_year=2010, poster_url=4),
-        Movie(title="Divergent", genre="Action", description="Two worlds collide", release_year=2000, poster_url=2),
+        # Movie(title="Batman vs Superman", genre="Action", description="Two heroes who have dominated the industry finally face off stay tuned and find out the reason and who will win in this action.", release_year=2023, poster_url="https://m.media-amazon.com/images/M/MV5BZTJkYjdmYjYtOGMyNC00ZGU1LThkY2ItYTc1OTVlMmE2YWY1XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg")
+        # ,    
+            Movie(
+            title="Batman vs Superman",
+            genre="Action",
+            description="Two heroes who have dominated the industry finally face off. Stay tuned and find out the reason and who will win in this action.",
+            release_year=2023,
+            poster_url="https://m.media-amazon.com/images/M/MV5BZTJkYjdmYjYtOGMyNC00ZGU1LThkY2ItYTc1OTVlMmE2YWY1XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+        )
+        ,
+        Movie(title="Queens Gambit", genre="Drama", description="A woman so in her game that she is not ready for any man to bring her down. Watch as she dominates the chess game and shows the power of women.", release_year=2011, poster_url="https://m.media-amazon.com/images/M/MV5BMmRlNjQxNWQtMjk1OS00N2QxLTk0YWQtMzRhYjY5YTFhNjMxXkEyXkFqcGc@._V1_QL75_UX190_CR0,0,190,281_.jpg"),
+        Movie(title="Ben 10", genre="kids", description="A 10 year old boy finds a watch called the omnitrix which he can transform to different aliens will he use it to save the world or destroy it.", release_year=2010, poster_url="https://occ-0-8407-1722.1.nflxso.net/dnm/api/v6/6AYY37jfdO6hpXcMjf9Yu5cnmO0/AAAABR6vn8BtaC8r6FhDOfMCliOri5vm4p5bCnxzV61blyd_QJP0qr8VdYGGyoFxkLfwDc1nDVqf4ilKrmD1XquOAlXD29EyAM4UbC4i.jpg"),
+        Movie(title="Love Tactics", genre="Romance", description="When two people who have been in the romance game too long they basically become pros, Not naive to silly tactics they face off against each other to see who will have the upper hand.", release_year=2000, poster_url="https://occ-0-8407-116.1.nflxso.net/dnm/api/v6/Qs00mKCpRvrkl3HZAN5KwEL1kpE/AAAABa35MbGCz3lUSTpuznsS4edbPgpTRK1P2jWrsa22oNv3xHiM_TyinMpuTe10BD-9nyyhr8MgzvCwOEkfPjgZfY9_K23tOGre-JgdlqBjHaeLfD-7OTJS_5sb8io24yOIU5B0tg.jpg")
+        ,
     ]
     db.session.add_all(Movies)
     db.session.commit()
+    movies = Movie.query.all()
+    print("\nDisplaying Movie Poster URLs:")
+    for movie in movies:
+        print(f"Title: {movie.title} - Poster URL: {movie.poster_url}")
 
     print("Seeding Posts...")
     Posts = [
-        Post(user_id=2, created_at=datetime.now(), content="music", movie_id=2, club_id=1, updated_at=datetime.now()),
-        Post(user_id=1, created_at=datetime.now(), content="music", movie_id=1, club_id=2, updated_at=datetime.now()),
-        Post(user_id=4, created_at=datetime.now(), content="music", movie_id=4, club_id=3, updated_at=datetime.now()),
-        Post(user_id=3, created_at=datetime.now(), content="music", movie_id=3, club_id=4, updated_at=datetime.now()),
+        Post(user_id=2, created_at=datetime.now(), content="Action", movie_id=1, club_id=1, updated_at=datetime.now()),
+        Post(user_id=1, created_at=datetime.now(), content="Drama", movie_id=2, club_id=2, updated_at=datetime.now()),
+        Post(user_id=4, created_at=datetime.now(), content="Kids", movie_id=3, club_id=3, updated_at=datetime.now()),
+        Post(user_id=3, created_at=datetime.now(), content="Romance", movie_id=4, club_id=4, updated_at=datetime.now()),
     ]
     db.session.add_all(Posts)
     db.session.commit()

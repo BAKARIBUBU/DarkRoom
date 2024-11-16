@@ -7,8 +7,8 @@ from models import Movie
 class Post(db.Model, SerializerMixin):
     __tablename__ = 'posts'
 
-    serialize_rules = ('-user_id', '-movie_id','-club_id','-comments','-movie', '-club_id', '-comments', '-movies')
-
+    # serialize_rules = ('-user_id', '-movie_id','-club_id','-comments',)
+    serialize_rules = ('-user_id', '-movie_id', '-club_id', 'movie.title', 'movie.poster_url')
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     movie_id = db.Column(db.Integer, db.ForeignKey('movies.id'), nullable=True)

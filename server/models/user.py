@@ -1,4 +1,4 @@
-from models.db import db 
+from models.db import db
 from sqlalchemy.sql import func
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -10,7 +10,7 @@ class User(db.Model,SerializerMixin):
 
     __tablename__ = 'users'
 
-    serialize_rules = ('-_password_hash','-posts','-comments','-ratings','-clubs','-following','followers','-club_users',)
+
     serialize_rules = ('-_password_hash','-posts','-comments','-ratings','-clubs','-club_users','-followers','-following',)
 
     id = db.Column(db.Integer, primary_key=True)
@@ -39,7 +39,10 @@ class User(db.Model,SerializerMixin):
 
     def check_password(self, password):
         return bcrypt.check_password_hash(self._password_hash, password)
-    
-    
-    def _repr_(self):
+
+
+    # def _repr_(self):
+    #   return f"<User {self.username}, {self.email}>"
+
+    def __repr__(self):
       return f"<User {self.username}, {self.email}>"
