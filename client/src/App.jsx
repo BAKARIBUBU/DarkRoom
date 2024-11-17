@@ -120,50 +120,50 @@ const AppContent = ({ isAuthenticated, user, setUser }) => {
   );
 };
 
-const AppContent = ({ isAuthenticated, user, setUser }) => {
-  const location = useLocation(); // Get the current route location
+// const AppContent = ({ isAuthenticated, user, setUser }) => {
+//   const location = useLocation(); // Get the current route location
 
-  // Don't render footer on the /dashboard route
-  const shouldShowFooter = location.pathname !== "/dashboard";
+//   // Don't render footer on the /dashboard route
+//   const shouldShowFooter = location.pathname !== "/dashboard";
 
-  return (
-    <div>
-      <Navbar user={user} setUser={setUser} />
-      <div className="pt-20">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage onLogin={setUser} />} />
-          <Route path="/signup" element={<SignupPage />} />
-          {/* Protected Route for Dashboard */}
-          <Route
-            path="/dashboard"
-            element={isAuthenticated() ? <Dashboard /> : <Navigate to="/login" />}
-          />
+//   return (
+//     <div>
+//       <Navbar user={user} setUser={setUser} />
+//       <div className="pt-20">
+//         <Routes>
+//           <Route path="/" element={<HomePage />} />
+//           <Route path="/login" element={<LoginPage onLogin={setUser} />} />
+//           <Route path="/signup" element={<SignupPage />} />
+//           {/* Protected Route for Dashboard */}
+//           <Route
+//             path="/dashboard"
+//             element={isAuthenticated() ? <Dashboard /> : <Navigate to="/login" />}
+//           />
 
-          {/* Protected Route for Profile Page */}
-          <Route
-            path="/profile"
-            element={isAuthenticated() ? <ProfilePage userId={1} /> : <Navigate to="/login" />}
-          />
+//           {/* Protected Route for Profile Page */}
+//           <Route
+//             path="/profile"
+//             element={isAuthenticated() ? <ProfilePage userId={1} /> : <Navigate to="/login" />}
+//           />
 
-          {/* Protected Route for Track Movies */}
-          <Route
-            path="/movies-tracking"
-            element={isAuthenticated() ? <Movie /> : <Navigate to="/login" />}
-          />
+//           {/* Protected Route for Track Movies */}
+//           <Route
+//             path="/movies-tracking"
+//             element={isAuthenticated() ? <Movie /> : <Navigate to="/login" />}
+//           />
 
-          {/* Protected Route for Clubs Manager */}
-          <Route
-            path="/clubs-manager"
-            element={isAuthenticated() ? <ClubsManager /> : <Navigate to="/login" />}
-          />
-        </Routes>
-      </div>
-      {/* Conditionally render the footer */}
-      {shouldShowFooter && <Footer />}
-    </div>
-  );
-};
+//           {/* Protected Route for Clubs Manager */}
+//           <Route
+//             path="/clubs-manager"
+//             element={isAuthenticated() ? <ClubsManager /> : <Navigate to="/login" />}
+//           />
+//         </Routes>
+//       </div>
+//       {/* Conditionally render the footer */}
+//       {shouldShowFooter && <Footer />}
+//     </div>
+//   );
+// };
 
 export default App;
 
