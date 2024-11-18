@@ -1,115 +1,64 @@
-import React, { useState } from 'react'; // Import React and useState hook
-import { createPostWithMovie } from '../../api/api'; // Import createPostWithMovie from your API module
+import React, { useState } from 'react';
 
+const CreatePostForm = ({ onSubmit }) => {
+  const [content, setContent] = useState("");
+  const [movieTitle, setMovieTitle] = useState("");
+  const [moviePosterUrl, setMoviePosterUrl] = useState("");
 
-const CreatePostForm = ({ userId, clubId, onPostCreated }) => {
-  const [content, setContent] = useState('');
-  const [movieTitle, setMovieTitle] = useState('');
-  const [moviePosterUrl, setMoviePosterUrl] = useState('');
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+
     if (!content || !movieTitle || !moviePosterUrl) {
-      alert("Please fill in all fields.");
+      console.error("All fields are required!");
       return;
     }
-    try {
-      await createPostWithMovie(userId, clubId, content, movieTitle, moviePosterUrl);
-      alert('Post created successfully!');
-      setContent('');
-      setMovieTitle('');
-      setMoviePosterUrl('');
-      onPostCreated(); // Notify parent to refresh the post list
-    } catch (error) {
-      console.error('Error creating post:', error);
-      alert('Failed to create post.');
-    }
+
+    onSubmit(content, movieTitle, moviePosterUrl); 
   };
 
   return (
-    <div className="create-post-form">
-      <h2>Create a Post</h2>
-      <form onSubmit={handleSubmit}>
-        <textarea
+    <form onSubmit={handleSubmit} className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-md">
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700" htmlFor="content">Content</label>
+        <input
+          id="content"
+          type="text"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          placeholder="Post content"
-          rows="4"
           required
-        ></textarea>
+          className="mt-1 p-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700" htmlFor="movieTitle">Movie Title</label>
         <input
+          id="movieTitle"
           type="text"
-          placeholder="Movie Title"
           value={movieTitle}
           onChange={(e) => setMovieTitle(e.target.value)}
           required
+          className="mt-1 p-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
+      </div>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700" htmlFor="moviePosterUrl">Movie Poster URL</label>
         <input
+          id="moviePosterUrl"
           type="text"
-          placeholder="Movie Poster URL"
           value={moviePosterUrl}
           onChange={(e) => setMoviePosterUrl(e.target.value)}
           required
+          className="mt-1 p-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        <button type="submit">Create Post</button>
-      </form>
-    </div>
+      </div>
+      <button 
+        type="submit"
+        className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        Submit Post
+      </button>
+    </form>
   );
 };
-
-// const CreatePostForm = ({ userId, clubId, onPostCreated }) => {
-//   const [content, setContent] = useState('');
-//   const [movieTitle, setMovieTitle] = useState('');
-//   const [moviePosterUrl, setMoviePosterUrl] = useState('');
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     if (!content || !movieTitle || !moviePosterUrl) {
-//       alert("Please fill in all fields.");
-//       return;
-//     }
-//     try {
-//       await createPostWithMovie(userId, clubId, content, movieTitle, moviePosterUrl);
-//       alert('Post created successfully!');
-//       setContent('');
-//       setMovieTitle('');
-//       setMoviePosterUrl('');
-//       onPostCreated(); // Notify parent to refresh the post list
-//     } catch (error) {
-//       console.error('Error creating post:', error);
-//       alert('Failed to create post.');
-//     }
-//   };
-
-//   return (
-//     <div className="create-post-form">
-//       <h2>Create a Post</h2>
-//       <form onSubmit={handleSubmit}>
-//         <textarea 
-//           value={content} 
-//           onChange={(e) => setContent(e.target.value)} 
-//           placeholder="Post content"
-//           rows="4"
-//           required
-//         ></textarea>
-//         <input 
-//           type="text" 
-//           placeholder="Movie Title" 
-//           value={movieTitle} 
-//           onChange={(e) => setMovieTitle(e.target.value)} 
-//           required 
-//         />
-//         <input 
-//           type="text" 
-//           placeholder="Movie Poster URL" 
-//           value={moviePosterUrl} 
-//           onChange={(e) => setMoviePosterUrl(e.target.value)} 
-//           required 
-//         />
-//         <button type="submit">Create Post</button>
-//       </form>
-//     </div>
-//   );
-// };
 
 export default CreatePostForm;
