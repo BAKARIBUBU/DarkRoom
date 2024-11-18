@@ -11,7 +11,7 @@ const PostPage = () => {
   const [posts, setPosts] = useState([]);
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
-  const [refreshPosts, setRefreshPosts] = useState(false);
+  const [refreshPosts] = useState(false);
   const [refreshComments, setRefreshComments] = useState(false);
 
   useEffect(() => {
