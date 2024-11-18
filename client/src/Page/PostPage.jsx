@@ -1,38 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getPosts, getComments, createPostWithMovie } from '../api/api';
-import CreatePostForm from '../components/Post/CreatePostForm';
+import { getPosts, getComments } from '../api/api';
 import PostList from '../components/Post/PostList';
 import CommentForm from '../components/Comment/CommentForm';
 import CommentList from '../components/Comment/CommentList';
 
-const PostPage = ({ userId, clubId }) => {
-  const { postId } = useParams(); // Get postId from URL params (if provided)
+const PostPage = () => {
+  const { postId } = useParams();
 
-  const [posts, setPosts] = useState([]); // List of posts
-  const [post, setPost] = useState(null); // Selected post details
-  const [comments, setComments] = useState([]); // Comments for the selected post
-  const [refreshPosts, setRefreshPosts] = useState(false); // Trigger for refreshing posts
-  const [refreshComments, setRefreshComments] = useState(false); // Trigger for refreshing comments
-  const [showCreatePost, setShowCreatePost] = useState(false); // State to toggle the CreatePostForm
+  const [posts, setPosts] = useState([]);
+  const [post, setPost] = useState(null);
+  const [comments, setComments] = useState([]);
+  const [refreshPosts, setRefreshPosts] = useState(false);
+  const [refreshComments, setRefreshComments] = useState(false);
 
-  // Fetch posts when the page loads or when posts are refreshed
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const postsData = await getPosts();
-        console.log(postsData.data);
-        
-        setPosts(postsData.data.data); // Assuming your API returns posts in `data`
+        setPosts(postsData);
 
-        // If postId exists, fetch the selected post
         if (postId) {
-          const selectedPost = postsData.data.find((p) => p.id === parseInt(postId));
+          const selectedPost = postsData.find(
+            (p) => p.id === parseInt(postId)
+          );
           setPost(selectedPost);
 
-          // Fetch comments for the selected post
           const commentsData = await getComments(postId);
-          setComments(commentsData.data);
+          setComments(Array.isArray(commentsData) ? commentsData : []);
         }
       } catch (error) {
         console.error('Error fetching posts or comments:', error);
@@ -42,75 +37,50 @@ const PostPage = ({ userId, clubId }) => {
     fetchPosts();
   }, [postId, refreshPosts, refreshComments]);
 
-  // Handle post creation
-  const handlePostCreated = () => {
-    setRefreshPosts((prevState) => !prevState); // Refresh the posts list after a new post is created
-  };
 
-  // Handle comment creation
+
   const handleCommentAdded = () => {
-    setRefreshComments((prevState) => !prevState); // Refresh the comments after a new comment is added
+    setRefreshComments((prev) => !prev);
   };
 
-  // Toggle visibility of the Create Post form
-  const handleCreatePostToggle = () => {
-    setShowCreatePost(!showCreatePost);
-    console.log("Show Create Post form:", !showCreatePost);
-  };
 
-  // If postId is provided but the selected post is still loading
+
   if (postId && !post) {
-    return <div>Loading post...</div>;
+    return <div className="text-center text-xl">Loading post...</div>;
   }
 
   return (
-    <div className="post-page">
-      <h1>{postId ? 'Post Details' : 'Posts'}</h1>
+    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">
+        {postId ? 'Post Details' : 'Posts'}
+      </h1>
 
-      {/* Create Post Button (only shown if postId is not provided) */}
-      {!postId && (
-        <button 
-          className="create-post-button"
-          onClick={handleCreatePostToggle}
-        >
-          Create Post
-        </button>
-      )}
-
-      {/* Create Post Form (Only show if postId is not provided and showCreatePost is true) */}
-      {!postId && showCreatePost && (
-        <CreatePostForm 
-          userId={userId} 
-          clubId={clubId} 
-          onPostCreated={handlePostCreated} 
-        />
-      )}
-
-      {/* List of Posts (Only show if postId is not provided) */}
       {!postId && <PostList posts={posts} />}
 
-      {/* Post Details and Comments Section (Only show if postId is provided) */}
       {postId && post && (
         <>
-          <h2>{post.content}</h2>
-          {post.movie && (
-            <div className="movie-info">
-              <img 
-                src={post.movie.poster_url || '/default-image.jpg'} 
-                alt={post.movie.title} 
-                className="movie-poster"
-              />
-              <h3>{post.movie.title}</h3>
+          <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">{post.content}</h2>
+            {post.movie && (
+              <div className="movie-info mb-6">
+                <img
+                  src={post.movie.poster_url || '/default-image.jpg'}
+                  alt={post.movie.title}
+                  className="w-10 h-10 object-cover rounded-md mb-4"
+                />
+                <h3 className="text-xl font-semibold text-gray-700">{post.movie.title}</h3>
+              </div>
+            )}
+            <div className="post-details">
+              <p className="text-sm text-gray-600">Club: {post.club?.name || 'N/A'}</p>
+              <p className="mt-2 text-sm text-gray-600">Posted by {post.user?.username || 'Anonymous'}</p>
             </div>
-          )}
-          <div className="post-details">
-            <p className="text-sm text-gray-600">Club: {post.club?.description || 'N/A'}</p>
-            <p className="mt-4 text-sm">Posted by: {post.user?.email || 'Anonymous'}</p>
           </div>
 
-          {/* Comments Section */}
-          <CommentList comments={comments} />
-          <CommentForm postId={postId} onCommentAdded={handleCommentAdded} />
+          <div className="mt-8">
+            <CommentList comments={comments} />
+            <CommentForm postId={postId} onCommentAdded={handleCommentAdded} />
+          </div>
         </>
       )}
     </div>
