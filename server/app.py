@@ -6,6 +6,10 @@ from models import db,Club,Comment,Follow,Movie,Post,Rating,User,UserClub
 from flask_jwt_extended import JWTManager,jwt_required, create_access_token, get_jwt_identity
 import os
 from sqlalchemy.orm import joinedload
+from datetime import timedelta
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from flask_cors import CORS
 from flask_migrate import Migrate
@@ -26,16 +30,19 @@ CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///darkroom.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# I commenented line 20 and replaced with inhouse secretkey
-# app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
-app.config['JWT_SECRET_KEY'] = 'EdwinSharonBakariBarkleyFavoured'
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=7) 
+# app.config['JWT_SECRET_KEY'] = 'EdwinSharonBakariBarkleyFavoured'
 
 migrate = Migrate(app, db)
 db.init_app(app)
 
 jwt = JWTManager(app)
 
+
+
 # bcrypt = Bcrypt(app)
+
 
 # Define a basic route
 
@@ -101,46 +108,6 @@ class UserByID(Resource):
 # Register the resource with the API
 api.add_resource(UserByID, '/users/<int:id>')
 
-
-#  SHARON WORK
-# class UserByID(Resource):
-#     def get(self, id):
-#         user = User.query.filter_by(id=id).first()
-
-#         if user is None:
-#             return jsonify({'message': 'User not found', 'status': 404})
-
-#         return jsonify({'message': 'User fetched successfully', 'status': 200, 'data': user.to_dict()})
-
-#     def patch(self, id):
-#         record = User.query.filter_by(id=id).first()
-
-#         if record is None:
-#            return jsonify({'message': 'User not found', 'status': 404})
-
-#         data = request.get_json()
-
-#     # Update the user fields based on the incoming data
-#         for attr, value in data.items():
-#           setattr(record, attr, value)
-
-#         db.session.add(record)
-#         db.session.commit()
-
-#         return jsonify({'message': 'User updated successfully', 'status': 200, 'data': record.to_dict()})
-
-#     def delete(self, id):
-#         record = User.query.filter_by(id=id).first()
-
-#         if record is None:
-#             return jsonify({'message': 'User not found', 'status': 404})
-
-#         db.session.delete(record)
-#         db.session.commit()
-#         return jsonify({'message': 'User successfully deleted', 'status': 200})
-
-# api.add_resource(UserByID, '/users/<int:id>')
-
 class UserRegistration(Resource):
     def post(self):
         data = request.get_json()
@@ -199,56 +166,6 @@ class Login(Resource):
 
 api.add_resource(Login, '/login')
 
-# BAKARI THE ENDPOINT BELOW DOES NOT INCLUDE PROFILE PICTURE
-# class Login(Resource):
-#     def post(self):
-#         data = request.get_json()
-#         email = data.get('email')
-#         password = data.get('password')
-
-#         user = User.query.filter_by(email=email).first()
-
-#         if user and user.check_password(password):
-#             # Generate the access token with user identity
-#             access_token = create_access_token(identity=user.id)
-
-#             # Include user details in the response
-#             return jsonify({
-#                 'message': 'Login successful',
-#                 'status': 200,
-#                 'access_token': access_token,
-#                 'user': {
-#                     'id': user.id,
-#                     'email': user.email,
-#                     'username': user.username  # Include any other user info you'd like here
-#                 }
-#             })
-
-#         return jsonify({'message': 'Invalid credentials', 'status': 401})
-
-# api.add_resource(Login, '/login')
-
-
-# SHARON WORK
-# class Login(Resource):
-#     def post(self):
-#         data = request.get_json()
-#         email = data.get('email')
-#         password = data.get('password')
-
-#         user = User.query.filter_by(email=email).first()
-
-#         if user and user.check_password(password):
-#             access_token = create_access_token(identity=user.id)
-#             return jsonify({
-#                 'message': 'Login successful',
-#                 'status': 200,
-#                 'access_token': access_token
-#             })
-
-#         return jsonify({'message': 'Invalid credentials', 'status': 401})
-
-# api.add_resource(Login, '/login')
 
 class Logout(Resource):
     def post(self):
@@ -372,64 +289,6 @@ class MovieByID(Resource):
 api.add_resource(MovieByID, '/movies/<int:id>')
 
 
-# SHARONS WORK
-# class MovieResource(Resource):
-#     def get(self):
-#         movies = Movie.query.all()
-#         return jsonify({'message': 'Movies fetched successfully', 'status': 200, 'data': [movie.to_dict() for movie in movies]})
-
-#     def post(self):
-#         data = request.get_json()
-#         new_movie = Movie(
-#             title=data['title'],
-#             genre=data['genre'],
-#             description=data['description'],
-#             release_year=data['release_year'],
-#             poster_url=data['poster_url']
-#         )
-#         db.session.add(new_movie)
-#         db.session.commit()
-#         return jsonify({'message': 'Movie created successfully', 'status': 201, 'data': new_movie.to_dict()})
-
-# api.add_resource(MovieResource, '/movies')
-
-# class MovieByID(Resource):
-#     def get(self, id):
-#         movie = Movie.query.filter_by(id=id).first()
-
-#         if movie is None:
-#             return jsonify({'message': 'Movie not found', 'status': 404})
-
-#         return jsonify({'message': 'Movie fetched successfully', 'status': 200, 'data': movie.to_dict()})
-
-#     def patch(self, id):
-#         movie = Movie.query.filter_by(id=id).first()
-
-#         if movie is None:
-#             return jsonify({'message': 'Movie not found', 'status': 404})
-
-#         data = request.get_json()
-
-#         for key, value in data.items():
-#             if hasattr(movie, key):
-#                 setattr(movie, key, value)
-
-#         db.session.commit()
-
-#         return jsonify({'message': 'Movie updated successfully', 'status': 200, 'data': movie.to_dict()})
-
-#     def delete(self, id):
-#         movie = Movie.query.filter_by(id=id).first()
-
-#         if movie is None:
-#             return jsonify({'message': 'Movie not found', 'status': 404})
-
-#         db.session.delete(movie)
-#         db.session.commit()
-
-#         return jsonify({'message': 'Movie successfully deleted', 'status': 200})
-
-# api.add_resource(MovieByID, '/movies/<int:id>')
 
 class ClubResource(Resource):
     def get(self):
@@ -444,12 +303,7 @@ class ClubResource(Resource):
         if not data.get('name'):
             return jsonify({'message': 'Club name is required', 'status': 400})
 
-        #   THIS SHARONES WORK
-        # new_club = Club(
-        #     name=data['name'],
-        #     description=data.get('description', ''),
-        #     members_num=data.get('members_num', 0)
-        # )
+
         new_club = Club(
               name=data['name'],
               description=data.get('description', ''),
@@ -698,7 +552,14 @@ api.add_resource(RatingByID, '/ratings/<int:id>')
 class CommentResource(Resource):
     def get(self, post_id):
         comments = Comment.query.filter_by(post_id=post_id).all()
-        return jsonify({'message': 'Comments fetched successfully', 'status': 200, 'data': [comment.to_dict() for comment in comments]})
+        return jsonify({
+        'message': 'Comments fetched successfully',
+        'status': 200,
+        'data': [
+            {**comment.to_dict(), 'user_name': comment.user.username} for comment in comments
+        ]
+    })
+        # return jsonify({'message': 'Comments fetched successfully', 'status': 200, 'data': [comment.to_dict() for comment in comments]})
 
     @jwt_required()  # Ensure the user is logged in
     def post(self, post_id):
