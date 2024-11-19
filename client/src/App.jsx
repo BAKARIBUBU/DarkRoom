@@ -1,67 +1,70 @@
-// import React from "react";
-// import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-// import Navbar from "./components/Navbar";
-// import Footer from "./components/Footer";
-// // import HomePage from "./components/Homepage";
-// // import LoginPage from "./components/LoginPage";
-// // import ProfilePage from "./components/ProfilePage";
-// // import SignupPage from "./components/SignUpPage";
-
-// // const App = () => {
-// //   return (
-// //     <Router>
-// //       <div>
-// //         {/* <h1>Darkroom App</h1> */}
-// //         <Navbar />
-// //         <Routes>
-// //                      <Route path="/" element={<HomePage />} />
-// //                     <Route path="/home" element={<HomePage />} />
-// //                     <Route path="/login" element={<LoginPage />} />
-// //                     <Route path="/profile" element={<ProfilePage />} />
-// //                     <Route path="/signup" element={<SignupPage/>} />
-// //         </Routes>
-// //         < Footer/>
-// //       </div>
-// //     </Router>
-// //   );
-// // };
-
-// // export default App;
-
-// Bakari's
-
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import HomePage from "./components/Homepage";
-import Footer from "./components/Footer";
-import LoginPage from "./components/LoginPage";
-import SignupPage from "./components/SignupPage";
-import Dashboard from "./components/Dashboard"; // Import Dashboard component
-import ProfilePage from "./components/ProfilePage"; // Import ProfilePage component
-import Movie from "./components/Movie"; // Import Movie component
-import ClubsManager from "./components/ClubManager"; // Import ClubsManager component
+import Navbar from "./Page/Navbar";
+import Footer from "./Page/Footer";
+import HomePage from "./Page/Homepage";
+import LoginPage from "./Page/LoginPage";
+import SignupPage from "./Page/SignupPage";
+import Dashboard from "./Page/Dashboard";
+import ProfilePage from "./Page/ProfilePage";
+import PostPage from "./Page/PostPage";
+import Movie from "./Page/Movie";
+import ClubsManager from "./Page/ClubManager"; 
+import PostList from "./components/Post/PostList"; 
+import CreatePostForm from "./components/Post/CreatePostForm"; 
+import UserProfile from "./Page/UserProfile"; 
+import { createPostWithMovie } from './api/api';
 
 const App = () => {
   const [user, setUser] = useState(null);
+  const [posts, setPosts] = useState([]);
 
-  // Function to check if the user is authenticated (has a valid token)
   const isAuthenticated = () => {
-    const token = localStorage.getItem("access_token"); // Adjust based on your storage method
-    return token && token !== ""; // You can also add additional validation, like checking the token expiry date.
+    const token = localStorage.getItem("access_token");
+    return token && token !== "";
   };
 
-  // Fetch user data from local storage on initial render
   useEffect(() => {
     const storedUser = {
       id: localStorage.getItem("user_id"),
       username: localStorage.getItem("username"),
       profile_picture: localStorage.getItem("user_profile_picture"),
     };
-    if (storedUser.id) {
-      setUser(storedUser);
-    }
+    if (storedUser.id) setUser(storedUser);
   }, []);
+
+  // Fetch posts from the server or localStorage
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const storedPosts = JSON.parse(localStorage.getItem("posts"));
+      if (storedPosts) {
+        setPosts(storedPosts);
+      } else {
+        try {
+          const response = await fetch("http://localhost:5000/posts");
+          const fetchedPosts = await response.json();
+          setPosts(fetchedPosts);
+          localStorage.setItem("posts", JSON.stringify(fetchedPosts));
+        } catch (error) {
+          console.error("Failed to fetch posts:", error);
+        }
+      }
+    };
+    fetchPosts();
+  }, []);
+
+  const handleCreatePost = async (content, movieTitle, moviePosterUrl) => {
+    try {
+      const userId = user ? user.id : null; 
+      const clubId = 1; 
+      const newPost = await createPostWithMovie(userId, clubId, content, movieTitle, moviePosterUrl);
+
+      setPosts((prevPosts) => [...(Array.isArray(prevPosts) ? prevPosts : []), newPost]);
+      localStorage.setItem("posts", JSON.stringify([...posts, newPost]));
+    } catch (error) {
+      console.error("Failed to create post:", error);
+    }
+  };
 
   return (
     <Router>
@@ -69,12 +72,14 @@ const App = () => {
         isAuthenticated={isAuthenticated}
         user={user}
         setUser={setUser}
+        posts={posts}
+        handleCreatePost={handleCreatePost}
       />
     </Router>
   );
 };
 
-const AppContent = ({ isAuthenticated, user, setUser }) => {
+const AppContent = ({ isAuthenticated, user, setUser, posts, handleCreatePost }) => {
   const location = useLocation(); // Get the current route location
 
   // Don't render footer on the /dashboard route
@@ -88,6 +93,7 @@ const AppContent = ({ isAuthenticated, user, setUser }) => {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage onLogin={setUser} />} />
           <Route path="/signup" element={<SignupPage />} />
+
           {/* Protected Route for Dashboard */}
           <Route
             path="/dashboard"
@@ -97,7 +103,7 @@ const AppContent = ({ isAuthenticated, user, setUser }) => {
           {/* Protected Route for Profile Page */}
           <Route
             path="/profile"
-            element={isAuthenticated() ? <ProfilePage userId={1} /> : <Navigate to="/login" />}
+            element={isAuthenticated() ? <ProfilePage userId={user?.id || 1} /> : <Navigate to="/login" />}
           />
 
           {/* Protected Route for Track Movies */}
@@ -111,14 +117,31 @@ const AppContent = ({ isAuthenticated, user, setUser }) => {
             path="/clubs-manager"
             element={isAuthenticated() ? <ClubsManager /> : <Navigate to="/login" />}
           />
+
+          {/* User Profile Route */}
+          <Route
+            path="/user/:id"
+            element={isAuthenticated() ? <UserProfile userId={user?.id || 1} /> : <Navigate to="/login" />}
+          />
+
+          {/* Posts Route */}
+          <Route
+            path="/posts"
+            element={
+              <div className="container mx-auto px-4">
+                <CreatePostForm onSubmit={handleCreatePost} />
+                <PostList posts={posts} />
+              </div>
+            }
+          />
+
+          <Route path="/posts/:postId" element={<PostPage />} />
         </Routes>
       </div>
-      {/* Conditionally render the footer */}
+
       {shouldShowFooter && <Footer />}
     </div>
   );
 };
 
 export default App;
-
-
