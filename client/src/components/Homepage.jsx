@@ -15,7 +15,7 @@ const HomePage = () => {
           Movies aren’t just entertainment—they’re a lens into the human experience.<br />
           Ever noticed how a blockbuster action film or an indie drama can evoke the same deep emotions, themes, and insights as classic literature?<br />Join us for lively, thought-provoking conversations where the love of film meets the rigor of analysis.<br />You won’t just watch movies. You’ll experience them.
         </p>
-        <a href="/login" className="text-white bg-lime-400 hover:bg-lime-600 focus:ring-4 focus:ring-lime-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-lime-600 dark:hover:bg-lime-700 focus:outline-none dark:focus:ring-lime-800 my-11">REGISTER HERE</a>
+        <a href="/signup" className="text-white bg-lime-400 hover:bg-lime-600 focus:ring-4 focus:ring-lime-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-lime-600 dark:hover:bg-lime-700 focus:outline-none dark:focus:ring-lime-800 my-11">REGISTER HERE</a>
       </div>
     </div>
     </div>

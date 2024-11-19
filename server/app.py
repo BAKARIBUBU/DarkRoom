@@ -1715,6 +1715,9 @@ class JoinClubResourceBakari(Resource):
 
         user_club = UserClub(user_id=current_user_id, club_id=club_id)
         db.session.add(user_club)
+         # Update the club's members count
+        club = Club.query.get(club_id)
+        club.members_num += 1  # Increment member count
         db.session.commit()
 
         return jsonify({'message': 'User added to club successfully', 'status': 201})
@@ -1772,6 +1775,9 @@ class LeaveClubResourceBakari(Resource):
             return jsonify({'message': 'User is not in this club', 'status': 404})
 
         db.session.delete(user_club)
+         # Update the club's members count
+        club = Club.query.get(club_id)
+        club.members_num -= 1  # Decrement member count
         db.session.commit()
         return jsonify({'message': 'User removed from club successfully', 'status': 200})
 
@@ -1839,6 +1845,62 @@ class ClubProfileImageResource(Resource):
         })
 
 api.add_resource(ClubProfileImageResource, '/clubs/<int:club_id>/updateProfileImage')
+
+
+# Club Details Resource: Fetch details of a specific club (members, posts, creation date)
+class ClubDetailResource(Resource):
+    @jwt_required()
+    def get(self, club_id):
+        # Fetch the club by ID
+        club = Club.query.get_or_404(club_id)
+
+        # Get members and posts related to the club
+        members = [user_club.user_id for user_club in club.club_users]  # List of user IDs who joined the club
+        posts = [post.to_dict() for post in club.posts]
+
+        # Return club details along with the members and posts
+        return jsonify({
+            'message': 'Club details fetched successfully',
+            'status': 200,
+            'data': {
+                'club': club.to_dict(),
+                'members': members,
+                'posts': posts,
+                'members_count': club.members_num  # Include the members count
+            }
+        })
+api.add_resource(ClubDetailResource, '/clubs/<int:club_id>/details')  # Fetch club details
+
+class DeleteClubResource(Resource):
+    @jwt_required()
+    def delete(self):
+        # Get the user identity from the JWT token
+        user_id = get_jwt_identity()
+        club_id = request.args.get('club_id')  # The club_id to delete will be passed as a query parameter
+
+        # Fetch the club from the database
+        club = Club.query.filter_by(id=club_id).first()
+
+        if not club:
+            return jsonify({'message': 'Club not found', 'status': 404})
+
+        # Ensure the user is the creator of the club
+        user_club = UserClub.query.filter_by(user_id=user_id, club_id=club_id).first()
+
+        if not user_club:
+            return jsonify({'message': 'You do not have permission to delete this club', 'status': 403})
+
+        # Delete the club from the UserClub relationship (the many-to-many table)
+        db.session.delete(user_club)
+        
+        # Delete the club itself
+        db.session.delete(club)
+        db.session.commit()
+
+        return jsonify({'message': 'Club deleted successfully', 'status': 200})
+
+# Adding the new resource to the API
+api.add_resource(DeleteClubResource, '/clubs/delete')
 
 
 if __name__ == '__main__':
