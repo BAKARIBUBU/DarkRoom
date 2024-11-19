@@ -108,6 +108,46 @@ class UserByID(Resource):
 # Register the resource with the API
 api.add_resource(UserByID, '/users/<int:id>')
 
+
+#  SHARON WORK
+# class UserByID(Resource):
+#     def get(self, id):
+#         user = User.query.filter_by(id=id).first()
+
+#         if user is None:
+#             return jsonify({'message': 'User not found', 'status': 404})
+
+#         return jsonify({'message': 'User fetched successfully', 'status': 200, 'data': user.to_dict()})
+
+#     def patch(self, id):
+#         record = User.query.filter_by(id=id).first()
+
+#         if record is None:
+#            return jsonify({'message': 'User not found', 'status': 404})
+
+#         data = request.get_json()
+
+#     # Update the user fields based on the incoming data
+#         for attr, value in data.items():
+#           setattr(record, attr, value)
+
+#         db.session.add(record)
+#         db.session.commit()
+
+#         return jsonify({'message': 'User updated successfully', 'status': 200, 'data': record.to_dict()})
+
+#     def delete(self, id):
+#         record = User.query.filter_by(id=id).first()
+
+#         if record is None:
+#             return jsonify({'message': 'User not found', 'status': 404})
+
+#         db.session.delete(record)
+#         db.session.commit()
+#         return jsonify({'message': 'User successfully deleted', 'status': 200})
+
+# api.add_resource(UserByID, '/users/<int:id>')
+
 class UserRegistration(Resource):
     def post(self):
         data = request.get_json()
@@ -165,6 +205,57 @@ class Login(Resource):
         return jsonify({'message': 'Invalid credentials', 'status': 401})
 
 api.add_resource(Login, '/login')
+
+# BAKARI THE ENDPOINT BELOW DOES NOT INCLUDE PROFILE PICTURE
+# class Login(Resource):
+#     def post(self):
+#         data = request.get_json()
+#         email = data.get('email')
+#         password = data.get('password')
+
+#         user = User.query.filter_by(email=email).first()
+
+#         if user and user.check_password(password):
+#             # Generate the access token with user identity
+#             access_token = create_access_token(identity=user.id)
+
+#             # Include user details in the response
+#             return jsonify({
+#                 'message': 'Login successful',
+#                 'status': 200,
+#                 'access_token': access_token,
+#                 'user': {
+#                     'id': user.id,
+#                     'email': user.email,
+#                     'username': user.username  # Include any other user info you'd like here
+#                 }
+#             })
+
+#         return jsonify({'message': 'Invalid credentials', 'status': 401})
+
+# api.add_resource(Login, '/login')
+
+
+# SHARON WORK
+# class Login(Resource):
+#     def post(self):
+#         data = request.get_json()
+#         email = data.get('email')
+#         password = data.get('password')
+
+#         user = User.query.filter_by(email=email).first()
+
+#         if user and user.check_password(password):
+#             access_token = create_access_token(identity=user.id)
+#             return jsonify({
+#                 'message': 'Login successful',
+#                 'status': 200,
+#                 'access_token': access_token
+#             })
+
+#         return jsonify({'message': 'Invalid credentials', 'status': 401})
+
+# api.add_resource(Login, '/login')
 
 
 class Logout(Resource):
@@ -289,6 +380,66 @@ class MovieByID(Resource):
 api.add_resource(MovieByID, '/movies/<int:id>')
 
 
+# SHARONS WORK
+# class MovieResource(Resource):
+#     def get(self):
+#         movies = Movie.query.all()
+#         return jsonify({'message': 'Movies fetched successfully', 'status': 200, 'data': [movie.to_dict() for movie in movies]})
+
+#     def post(self):
+#         data = request.get_json()
+#         new_movie = Movie(
+#             title=data['title'],
+#             genre=data['genre'],
+#             description=data['description'],
+#             release_year=data['release_year'],
+#             poster_url=data['poster_url']
+#         )
+#         db.session.add(new_movie)
+#         db.session.commit()
+#         return jsonify({'message': 'Movie created successfully', 'status': 201, 'data': new_movie.to_dict()})
+
+# api.add_resource(MovieResource, '/movies')
+
+# class MovieByID(Resource):
+#     def get(self, id):
+#         movie = Movie.query.filter_by(id=id).first()
+
+#         if movie is None:
+#             return jsonify({'message': 'Movie not found', 'status': 404})
+
+#         return jsonify({'message': 'Movie fetched successfully', 'status': 200, 'data': movie.to_dict()})
+
+#     def patch(self, id):
+#         movie = Movie.query.filter_by(id=id).first()
+
+#         if movie is None:
+#             return jsonify({'message': 'Movie not found', 'status': 404})
+
+#         data = request.get_json()
+
+#         for key, value in data.items():
+#             if hasattr(movie, key):
+#                 setattr(movie, key, value)
+
+#         db.session.commit()
+
+#         return jsonify({'message': 'Movie updated successfully', 'status': 200, 'data': movie.to_dict()})
+
+#     def delete(self, id):
+#         movie = Movie.query.filter_by(id=id).first()
+
+#         if movie is None:
+#             return jsonify({'message': 'Movie not found', 'status': 404})
+
+#         db.session.delete(movie)
+#         db.session.commit()
+
+#         return jsonify({'message': 'Movie successfully deleted', 'status': 200})
+
+# api.add_resource(MovieByID, '/movies/<int:id>')
+
+
 
 class ClubResource(Resource):
     def get(self):
@@ -410,6 +561,27 @@ class PostResource(Resource):
         return jsonify({'message': 'Post created successfully', 'status': 201, 'data': new_post.to_dict()})
 
 api.add_resource(PostResource, '/posts')
+@classmethod
+def create_post_with_movie(cls, user_id, club_id, content, movie_title, movie_poster_url):
+    # Find or create the movie
+    movie = Movie.query.filter_by(title=movie_title, poster_url=movie_poster_url).first()
+    if not movie:
+        movie = Movie(title=movie_title, poster_url=movie_poster_url, user_id=user_id)
+        db.session.add(movie)
+        db.session.commit()
+
+    # Create the post
+    new_post = cls(
+        user_id=user_id,
+        club_id=club_id,
+        content=content,
+        movie_id=movie.id,
+        updated_at=func.now()
+    )
+    db.session.add(new_post)
+    db.session.commit()
+
+    return new_post
 
 class PostByID(Resource):
     def get(self, id):
@@ -788,6 +960,235 @@ class UsersInClub(Resource):
         return jsonify({'message': 'Users in club fetched successfully', 'status': 200, 'data': [user.to_dict() for user in users]})
 
 api.add_resource(UsersInClub, '/clubs/<int:club_id>/users')
+
+
+
+# BAKARI _______________________________________________________BEGINING____________________________________________________________________
+
+# Clubs Resource: List all clubs and create a new club
+class ClubsResourceBakari(Resource):
+    def get(self):
+        clubs = Club.query.all()
+        return jsonify({'message': 'Clubs fetched successfully', 'status': 200, 'data': [club.to_dict() for club in clubs]})
+
+    @jwt_required()
+    def post(self):
+        data = request.get_json()
+        user_id = get_jwt_identity()
+
+        if not data.get('name'):
+            return jsonify({'message': 'Club name is required', 'status': 400})
+
+        new_club = Club(
+            name=data['name'],
+            description=data.get('description', ''),
+            members_num=data.get('members_num', 0),
+            profile_image=data.get('profile_image', 'https://www.shutterstock.com/image-vector/silhouette-heads-faces-profile-multiethnic-600nw-2161769995.jpg')
+        )
+
+        user_club = UserClub(user_id=user_id, club=new_club)
+        db.session.add(user_club)
+        db.session.add(new_club)
+        db.session.commit()
+
+        return jsonify({'message': 'Club created successfully', 'status': 201, 'data': new_club.to_dict()})
+
+api.add_resource(ClubsResourceBakari, '/clubs')
+
+
+# Single Club Resource: Fetch, update, and delete a specific club
+class SingleClubResourceBakari(Resource):
+    def get(self, club_id):
+        try:
+            club = Club.query.filter_by(id=club_id).one()
+            return jsonify({'message': 'Club fetched successfully', 'status': 200, 'data': club.to_dict()})
+        except NoResultFound:
+            return jsonify({'message': 'Club not found', 'status': 404})
+
+    @jwt_required()
+    def patch(self, club_id):
+        user_id = get_jwt_identity()
+        club = Club.query.filter_by(id=club_id).first()
+
+        if club is None:
+            return jsonify({'message': 'Club not found', 'status': 404})
+
+        if user_id not in [user_club.user_id for user_club in club.club_users]:
+            return jsonify({'message': 'Unauthorized to edit this club', 'status': 403})
+
+        data = request.get_json()
+        for attr, value in data.items():
+            setattr(club, attr, value)
+
+        db.session.commit()
+        return jsonify({'message': 'Club updated successfully', 'status': 200, 'data': club.to_dict()})
+
+    @jwt_required()
+    def delete(self, club_id):
+        user_id = get_jwt_identity()
+        club = Club.query.filter_by(id=club_id).first()
+
+        if club is None:
+            return jsonify({'message': 'Club not found', 'status': 404})
+
+        if user_id not in [user_club.user_id for user_club in club.club_users]:
+            return jsonify({'message': 'Unauthorized to delete this club', 'status': 403})
+
+        db.session.delete(club)
+        db.session.commit()
+        return jsonify({'message': 'Club successfully deleted', 'status': 200})
+
+api.add_resource(SingleClubResourceBakari, '/clubs/<int:club_id>')
+
+class JoinClubResourceBakari(Resource):
+    @jwt_required()
+    def post(self):
+        data = request.get_json()
+        club_id = data.get('club_id')
+
+        if not club_id:
+            return jsonify({'message': 'club_id is required', 'status': 400})
+
+        current_user_id = get_jwt_identity()
+
+        user = User.query.get(current_user_id)
+        club = Club.query.get(club_id)
+
+        if not user:
+            return jsonify({'message': 'User not found', 'status': 404})
+        if not club:
+            return jsonify({'message': 'Club not found', 'status': 404})
+
+        existing_user_club = UserClub.query.filter_by(user_id=current_user_id, club_id=club_id).first()
+        if existing_user_club:
+            return jsonify({'message': 'User is already in this club', 'status': 400})
+
+        user_club = UserClub(user_id=current_user_id, club_id=club_id)
+        db.session.add(user_club)
+        db.session.commit()
+
+        return jsonify({'message': 'User added to club successfully', 'status': 201})
+
+api.add_resource(JoinClubResourceBakari, '/clubs/join')
+
+
+# Join Club Resource: Add a user to a club
+# class JoinClubResourceBakari(Resource):
+#     @jwt_required()
+#     def post(self):
+#         data = request.get_json()
+#         user_id = data.get('user_id')
+#         club_id = data.get('club_id')
+
+#         if not user_id or not club_id:
+#             return jsonify({'message': 'user_id and club_id are required', 'status': 400})
+
+#         current_user_id = get_jwt_identity()
+#         if current_user_id != user_id:
+#             return jsonify({'message': 'You can only add yourself to a club', 'status': 403})
+
+#         user = User.query.get(user_id)
+#         club = Club.query.get(club_id)
+
+#         if not user:
+#             return jsonify({'message': 'User not found', 'status': 404})
+#         if not club:
+#             return jsonify({'message': 'Club not found', 'status': 404})
+
+#         existing_user_club = UserClub.query.filter_by(user_id=user_id, club_id=club_id).first()
+#         if existing_user_club:
+#             return jsonify({'message': 'User is already in this club', 'status': 400})
+
+#         user_club = UserClub(user_id=user_id, club_id=club_id)
+#         db.session.add(user_club)
+#         db.session.commit()
+
+#         return jsonify({'message': 'User added to club successfully', 'status': 201})
+
+# api.add_resource(JoinClubResourceBakari, '/clubs/join')
+
+
+
+# Leave Club Resource: Remove a user from a club
+class LeaveClubResourceBakari(Resource):
+    @jwt_required()
+    def delete(self, user_id, club_id):
+        current_user_id = get_jwt_identity()
+        if current_user_id != user_id:
+            return jsonify({'message': 'You can only remove yourself from a club', 'status': 403})
+
+        user_club = UserClub.query.filter_by(user_id=user_id, club_id=club_id).first()
+        if not user_club:
+            return jsonify({'message': 'User is not in this club', 'status': 404})
+
+        db.session.delete(user_club)
+        db.session.commit()
+        return jsonify({'message': 'User removed from club successfully', 'status': 200})
+
+api.add_resource(LeaveClubResourceBakari, '/clubs/leave/<int:user_id>/<int:club_id>')
+
+
+# User Clubs Resource: List all clubs a user is a member of
+class UserClubsResourceBakari(Resource):
+    def get(self, user_id):
+        clubs = Club.query.join(UserClub).filter(UserClub.user_id == user_id).all()
+
+        if not clubs:
+            return jsonify({'message': 'User is not a member of any club', 'status': 404})
+
+        return jsonify({'message': 'Clubs fetched successfully', 'status': 200, 'data': [club.to_dict() for club in clubs]})
+
+api.add_resource(UserClubsResourceBakari, '/users/<int:user_id>/clubs')
+
+
+# Club Members Resource: List all users in a club
+class ClubMembersResourceBakari(Resource):
+    def get(self, club_id):
+        users = User.query.join(UserClub).filter(UserClub.club_id == club_id).all()
+
+        if not users:
+            return jsonify({'message': 'No users in this club', 'status': 404})
+
+        return jsonify({'message': 'Users in club fetched successfully', 'status': 200, 'data': [user.to_dict() for user in users]})
+
+api.add_resource(ClubMembersResourceBakari, '/clubs/<int:club_id>/members')
+
+# ______________________________________________________END___________________________________________________________________________________________-
+# Favoured
+class ClubProfileImageResource(Resource):
+    @jwt_required()
+    def put(self, club_id):
+        # Ensure the user is authorized to update this club
+        user_id = get_jwt_identity()
+        club = Club.query.filter_by(id=club_id).first()
+
+        if club is None:
+            return jsonify({'message': 'Club not found', 'status': 404})
+
+        # Check if the user is a member of the club
+        if user_id not in [user_club.user_id for user_club in club.club_users]:
+            return jsonify({'message': 'Unauthorized to edit this club', 'status': 403})
+
+        # Get the profile image URL from the request body
+        data = request.get_json()
+        profile_image_url = data.get('profileImage')
+
+        if not profile_image_url:
+            return jsonify({'message': 'No profile image URL provided', 'status': 400})
+
+        # Update the club's profile image
+        club.profile_image = profile_image_url  # Assuming 'profile_image' is a column in your Club model
+
+        # Commit the changes to the database
+        db.session.commit()
+
+        return jsonify({
+            'message': 'Profile image updated successfully',
+            'status': 200,
+            'data': club.to_dict()
+        })
+
+api.add_resource(ClubProfileImageResource, '/clubs/<int:club_id>/updateProfileImage')
 
 
 if __name__ == '__main__':

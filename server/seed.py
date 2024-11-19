@@ -3,6 +3,8 @@ from random import choice
 from models import db, User, Movie, Club, Post, Comment
 from werkzeug.security import generate_password_hash
 from app import app
+from models.club import Club
+from models.db import db
 from datetime import datetime
 
 fake = Faker()

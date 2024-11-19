@@ -39,17 +39,30 @@ export const createPostWithMovie = async (user_id, club_id, content, movie_title
   }
 };
 
-
-
 export const getPosts = async () => {
   try {
     const response = await api.get('/posts');
-    return response.data.data;
+    const validPosts = response.data.data.filter(Boolean); // Remove null values
+    console.log('Valid Posts:', validPosts); // Debugging
+    return validPosts;
   } catch (error) {
     console.error('Error fetching posts:', error);
     throw error;
   }
 };
+
+
+// export const getPosts = async () => {
+//   try {
+//     const response = await api.get('/posts');
+//     console.log('Fetched posts:', response.data.data);
+    
+//     return response.data.data;
+//   } catch (error) {
+//     console.error('Error fetching posts:', error);
+//     throw error;
+//   }
+// };
 
 export const getComments = async (post_id) => {
   console.log("Post ID:", post_id)

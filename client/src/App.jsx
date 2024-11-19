@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Navbar from "./Page/Navbar";
 import Footer from "./Page/Footer";
 import HomePage from "./Page/Homepage";
@@ -9,10 +9,11 @@ import Dashboard from "./Page/Dashboard";
 import ProfilePage from "./Page/ProfilePage";
 import PostPage from "./Page/PostPage";
 import Movie from "./Page/Movie";
-import PostList from "./components/Post/PostList";
-import CreatePostForm from "./components/Post/CreatePostForm";
-import UserProfile from "./Page/UserProfile";
-import { createPostWithMovie } from './api/api';  
+import ClubsManager from "./Page/ClubManager"; 
+import PostList from "./components/Post/PostList"; 
+import CreatePostForm from "./components/Post/CreatePostForm"; 
+import UserProfile from "./Page/UserProfile"; 
+import { createPostWithMovie } from './api/api';
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -32,6 +33,7 @@ const App = () => {
     if (storedUser.id) setUser(storedUser);
   }, []);
 
+  // Fetch posts from the server or localStorage
   useEffect(() => {
     const fetchPosts = async () => {
       const storedPosts = JSON.parse(localStorage.getItem("posts"));
@@ -52,65 +54,94 @@ const App = () => {
   }, []);
 
   const handleCreatePost = async (content, movieTitle, moviePosterUrl) => {
-  try {
-    const userId = user ? user.id : null; 
-    const clubId = 1; 
-    const newPost = await createPostWithMovie(userId, clubId, content, movieTitle, moviePosterUrl);
+    try {
+      const userId = user ? user.id : null; 
+      const clubId = 1; 
+      const newPost = await createPostWithMovie(userId, clubId, content, movieTitle, moviePosterUrl);
 
-    setPosts((prevPosts) => [...(Array.isArray(prevPosts) ? prevPosts : []), newPost]);
-
-
-    localStorage.setItem("posts", JSON.stringify([...posts, newPost]));
-  } catch (error) {
-    console.error("Failed to create post:", error);
-  }
-};
-
-
-
+      setPosts((prevPosts) => [...(Array.isArray(prevPosts) ? prevPosts : []), newPost]);
+      localStorage.setItem("posts", JSON.stringify([...posts, newPost]));
+    } catch (error) {
+      console.error("Failed to create post:", error);
+    }
+  };
 
   return (
     <Router>
-      <div className="flex flex-col min-h-screen">
-        <Navbar user={user} setUser={setUser} />
-        <div className="flex-grow pt-20 bg-gray-50">
-          <AppRoutes
-            isAuthenticated={isAuthenticated}
-            user={user}
-            setUser={setUser}
-            posts={posts}
-            handleCreatePost={handleCreatePost}
-          />
-        </div>
-        <Footer />
-      </div>
+      <AppContent
+        isAuthenticated={isAuthenticated}
+        user={user}
+        setUser={setUser}
+        posts={posts}
+        handleCreatePost={handleCreatePost}
+      />
     </Router>
   );
 };
 
-const AppRoutes = ({ isAuthenticated, user, setUser, posts, handleCreatePost }) => {
+const AppContent = ({ isAuthenticated, user, setUser, posts, handleCreatePost }) => {
+  const location = useLocation(); // Get the current route location
+
+  // Don't render footer on the /dashboard route
+  const shouldShowFooter = location.pathname !== "/dashboard";
+
   return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/login" element={<LoginPage onLogin={setUser} />} />
-      <Route path="/signup" element={<SignupPage />} />
-      <Route path="/dashboard" element={isAuthenticated() ? <Dashboard /> : <Navigate to="/login" />} />
-      <Route path="/profile" element={isAuthenticated() ? <ProfilePage userId={user?.id || 1} /> : <Navigate to="/login" />} />
-      <Route path="/user/:id" element={<UserProfile userId={user?.id} />} />
-      <Route path="/movies-tracking" element={isAuthenticated() ? <Movie /> : <Navigate to="/login" />} />
-      <Route
-        path="/posts"
-        element={
-          <div className="container mx-auto px-4">
-            <CreatePostForm onSubmit={handleCreatePost} />
-            <PostList posts={posts} />
-          </div>
-        }
-      />
-      <Route path="/posts/:postId" element={<PostPage />} />
-    </Routes>
+    <div>
+      <Navbar user={user} setUser={setUser} />
+      <div className="pt-20">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage onLogin={setUser} />} />
+          <Route path="/signup" element={<SignupPage />} />
+
+          {/* Protected Route for Dashboard */}
+          <Route
+            path="/dashboard"
+            element={isAuthenticated() ? <Dashboard /> : <Navigate to="/login" />}
+          />
+
+          {/* Protected Route for Profile Page */}
+          <Route
+            path="/profile"
+            element={isAuthenticated() ? <ProfilePage userId={user?.id || 1} /> : <Navigate to="/login" />}
+          />
+
+          {/* Protected Route for Track Movies */}
+          <Route
+            path="/movies-tracking"
+            element={isAuthenticated() ? <Movie /> : <Navigate to="/login" />}
+          />
+
+          {/* Protected Route for Clubs Manager */}
+          <Route
+            path="/clubs-manager"
+            element={isAuthenticated() ? <ClubsManager /> : <Navigate to="/login" />}
+          />
+
+          {/* User Profile Route */}
+          <Route
+            path="/user/:id"
+            element={isAuthenticated() ? <UserProfile userId={user?.id || 1} /> : <Navigate to="/login" />}
+          />
+
+          {/* Posts Route */}
+          <Route
+            path="/posts"
+            element={
+              <div className="container mx-auto px-4">
+                <CreatePostForm onSubmit={handleCreatePost} />
+                <PostList posts={posts} />
+              </div>
+            }
+          />
+
+          <Route path="/posts/:postId" element={<PostPage />} />
+        </Routes>
+      </div>
+
+      {shouldShowFooter && <Footer />}
+    </div>
   );
 };
 
 export default App;
-
