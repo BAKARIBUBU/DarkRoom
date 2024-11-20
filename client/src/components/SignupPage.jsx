@@ -16,7 +16,7 @@ const SignupPage = () => {
     setSuccessMessage('');
 
     try {
-      const response = await axios.post('http://127.0.0.1:5555/register', {
+      const response = await axios.post('http://127.0.0.1:5000/register', {
         username,
         email,
         password
