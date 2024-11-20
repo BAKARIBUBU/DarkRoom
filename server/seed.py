@@ -166,25 +166,25 @@ if __name__ == "__main__":
     # db.session.add_all(Ratings)
     # db.session.commit()
 
-    print("Seeding Users...")
-    Users = [
-        User(username="John", email="john@gmail.com", _password_hash="pass144", time_created=datetime.now(), profile_picture="dog", time_updated=datetime.now()),
-        User(username="Amos", email="amos@gmail.com", _password_hash="amos544", time_created=datetime.now(), profile_picture="dog", time_updated=datetime.now()),
-        User(username="Joan", email="joan@gmail.com", _password_hash="joan345", time_created=datetime.now(), profile_picture="dog", time_updated=datetime.now()),
-        User(username="Beatrice", email="beatrice@gmail.com", _password_hash="Rabbit", time_created=datetime.now(), profile_picture="dog", time_updated=datetime.now()),
-    ]
-    db.session.add_all(Users)
-    db.session.commit()
+#     print("Seeding Users...")
+#     Users = [
+#         User(username="John", email="john@gmail.com", _password_hash="pass144", time_created=datetime.now(), profile_picture="dog", time_updated=datetime.now()),
+#         User(username="Amos", email="amos@gmail.com", _password_hash="amos544", time_created=datetime.now(), profile_picture="dog", time_updated=datetime.now()),
+#         User(username="Joan", email="joan@gmail.com", _password_hash="joan345", time_created=datetime.now(), profile_picture="dog", time_updated=datetime.now()),
+#         User(username="Beatrice", email="beatrice@gmail.com", _password_hash="Rabbit", time_created=datetime.now(), profile_picture="dog", time_updated=datetime.now()),
+#     ]
+#     db.session.add_all(Users)
+#     db.session.commit()
 
-    print("Seeding UserClubs...")
-    UserClubs = [
-    UserClub(user_id=1, club_id=2, joined_at=datetime.now()),  # Explicitly defining user_id
-    UserClub(user_id=2, club_id=3, joined_at=datetime.now()),  # Explicitly defining user_id
-    UserClub(user_id=4, club_id=4, joined_at=datetime.now()),  # Explicitly defining user_id
-    UserClub(user_id=3, club_id=1, joined_at=datetime.now())   # Explicitly defining user_id
-]
-    db.session.add_all(UserClubs)
-    db.session.commit()
+#     print("Seeding UserClubs...")
+#     UserClubs = [
+#     UserClub(user_id=1, club_id=2, joined_at=datetime.now()),  # Explicitly defining user_id
+#     UserClub(user_id=2, club_id=3, joined_at=datetime.now()),  # Explicitly defining user_id
+#     UserClub(user_id=4, club_id=4, joined_at=datetime.now()),  # Explicitly defining user_id
+#     UserClub(user_id=3, club_id=1, joined_at=datetime.now())   # Explicitly defining user_id
+# ]
+#     db.session.add_all(UserClubs)
+#     db.session.commit()
 
 
 print("Seeding Completed!")
