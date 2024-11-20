@@ -41,7 +41,7 @@ const DashboardSidebar = () => {
             <FaEye className="mr-3 text-lg" />
             <span>View Posts</span>
           </Link>
-          <Link to="/clubs" className="flex items-center p-3 hover:bg-gray-700 rounded-lg transition-colors duration-200">
+          <Link to="/clubs-manager" className="flex items-center p-3 hover:bg-gray-700 rounded-lg transition-colors duration-200">
             <FaUsers className="mr-3 text-lg" />
             <span>Movie Clubs</span>
           </Link>

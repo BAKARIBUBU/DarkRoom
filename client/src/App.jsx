@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Navbar from "./Page/Navbar";
 import Footer from "./Page/Footer";
 import HomePage from "./Page/Homepage";
@@ -7,41 +7,79 @@ import LoginPage from "./Page/LoginPage";
 import SignupPage from "./Page/SignupPage";
 import Dashboard from "./Page/Dashboard";
 import ProfilePage from "./Page/ProfilePage";
-import Movie from "./Page/Movie";
-import PostList from "./components/Post/PostList";
 import PostPage from "./Page/PostPage";
-import CreatePostForm from "./components/Post/CreatePostForm";
-// import RatingsPage from "./Page/RatingsPage"; 
+import Movie from "./Page/Movie";
+import ClubsManager from "./Page/ClubManager"; 
+import PostList from "./components/Post/PostList"; 
+import CreatePostForm from "./components/Post/CreatePostForm"; 
+import UserProfile from "./Page/UserProfile"; 
+import { createPostWithMovie } from './api/api';
 
 const App = () => {
   const [user, setUser] = useState(null);
+  const [posts, setPosts] = useState([]);
 
-  // Function to check if the user is authenticated (has a valid token)
   const isAuthenticated = () => {
-    const token = localStorage.getItem("access_token"); // Adjust based on your storage method
-    return token && token !== ""; // You can also add additional validation, like checking the token expiry date.
+    const token = localStorage.getItem("access_token");
+    return token && token !== "";
   };
 
-  // Fetch user data from local storage on initial render
   useEffect(() => {
     const storedUser = {
       id: localStorage.getItem("user_id"),
       username: localStorage.getItem("username"),
       profile_picture: localStorage.getItem("user_profile_picture"),
     };
-    if (storedUser.id) {
-      setUser(storedUser);
-    }
+    if (storedUser.id) setUser(storedUser);
   }, []);
+
+  // Fetch posts from the server or localStorage
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const storedPosts = JSON.parse(localStorage.getItem("posts"));
+      if (storedPosts) {
+        setPosts(storedPosts);
+      } else {
+        try {
+          const response = await fetch("http://localhost:5000/posts");
+          const fetchedPosts = await response.json();
+          setPosts(fetchedPosts);
+          localStorage.setItem("posts", JSON.stringify(fetchedPosts));
+        } catch (error) {
+          console.error("Failed to fetch posts:", error);
+        }
+      }
+    };
+    fetchPosts();
+  }, []);
+
+  const handleCreatePost = async (content, movieTitle, moviePosterUrl) => {
+    try {
+      const userId = user ? user.id : null; 
+      const clubId = 1; 
+      const newPost = await createPostWithMovie(userId, clubId, content, movieTitle, moviePosterUrl);
+
+      setPosts((prevPosts) => [...(Array.isArray(prevPosts) ? prevPosts : []), newPost]);
+      localStorage.setItem("posts", JSON.stringify([...posts, newPost]));
+    } catch (error) {
+      console.error("Failed to create post:", error);
+    }
+  };
 
   return (
     <Router>
-      <AppContent isAuthenticated={isAuthenticated} user={user} setUser={setUser} />
+      <AppContent
+        isAuthenticated={isAuthenticated}
+        user={user}
+        setUser={setUser}
+        posts={posts}
+        handleCreatePost={handleCreatePost}
+      />
     </Router>
   );
 };
 
-const AppContent = ({ isAuthenticated, user, setUser }) => {
+const AppContent = ({ isAuthenticated, user, setUser, posts, handleCreatePost }) => {
   const location = useLocation(); // Get the current route location
 
   // Don't render footer on the /dashboard route
@@ -65,7 +103,7 @@ const AppContent = ({ isAuthenticated, user, setUser }) => {
           {/* Protected Route for Profile Page */}
           <Route
             path="/profile"
-            element={isAuthenticated() ? <ProfilePage userId={user ? user.id : 1} /> : <Navigate to="/login" />}
+            element={isAuthenticated() ? <ProfilePage userId={user?.id || 1} /> : <Navigate to="/login" />}
           />
 
           {/* Protected Route for Track Movies */}
@@ -74,19 +112,33 @@ const AppContent = ({ isAuthenticated, user, setUser }) => {
             element={isAuthenticated() ? <Movie /> : <Navigate to="/login" />}
           />
 
-          {/* Public routes for Posts */}
-          <Route path="/posts" element={<PostList />} />
+          {/* Protected Route for Clubs Manager */}
+          <Route
+            path="/clubs-manager"
+            element={isAuthenticated() ? <ClubsManager /> : <Navigate to="/login" />}
+          />
+
+          {/* User Profile Route */}
+          <Route
+            path="/user/:id"
+            element={isAuthenticated() ? <UserProfile userId={user?.id || 1} /> : <Navigate to="/login" />}
+          />
+
+          {/* Posts Route */}
+          <Route
+            path="/posts"
+            element={
+              <div className="container mx-auto px-4">
+                <CreatePostForm onSubmit={handleCreatePost} />
+                <PostList posts={posts} />
+              </div>
+            }
+          />
+
           <Route path="/posts/:postId" element={<PostPage />} />
-
-          {/* Create Post route */}
-          <Route path="/create" element={<CreatePostForm userId={user ? user.id : 1} />} />
-
-           {/* Route for movie ratings */}
-          {/* <Route path="/movies/:id/ratings" element={<RatingsPage />} /> */}
-
         </Routes>
       </div>
-      {/* Conditionally render the footer */}
+
       {shouldShowFooter && <Footer />}
     </div>
   );
