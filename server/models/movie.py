@@ -2,6 +2,7 @@ from models.db import db
 from sqlalchemy_serializer import SerializerMixin
 
 class Movie(db.Model, SerializerMixin):
+    
     __tablename__ = 'movies'
 
     serialize_rules = ('-posts', '-ratings', '-user')  
