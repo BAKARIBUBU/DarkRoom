@@ -13,7 +13,7 @@ const LoginPage = ({ onLogin }) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://127.0.0.1:5000/login', {
+      const response = await axios.post('http://127.0.0.1:5555/login', {
         email,
         password
       });
@@ -29,6 +29,7 @@ const LoginPage = ({ onLogin }) => {
         localStorage.setItem('username', user.username);
         localStorage.setItem('user_profile_picture', user.profile_picture);
         localStorage.setItem('access_token', response.data.access_token);
+        console.log('Access token stored:', localStorage.getItem('access_token'));
 
         // Call the onLogin callback to update the user state in the parent component
         onLogin(user);
@@ -69,6 +70,7 @@ const LoginPage = ({ onLogin }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              autoComplete="current-password"
               className="w-full p-3 mt-2 text-gray-800 border rounded-md focus:outline-none focus:ring focus:ring-[#107b5b]"
             />
           </div>
