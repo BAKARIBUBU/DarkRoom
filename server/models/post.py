@@ -1,7 +1,7 @@
 from models.db import db
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.sql import func
-from models import Movie
+from models.movie import Movie
 
 
 class Post(db.Model, SerializerMixin):
