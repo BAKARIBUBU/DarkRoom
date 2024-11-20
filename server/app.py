@@ -7,9 +7,9 @@ from flask_jwt_extended import JWTManager,jwt_required, create_access_token, get
 import os
 from sqlalchemy.orm import joinedload
 from datetime import timedelta
-from dotenv import load_dotenv
 
-load_dotenv()
+
+
 
 from flask_cors import CORS
 from flask_migrate import Migrate
@@ -22,7 +22,7 @@ api = Api(app)
 CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 
 # CORS(app, resources={r"/*": {"origins": allowed_origins}})
-# CORS(app, origins="http://localhost:5173") 
+# CORS(app, origins="http://localhost:5173")
 # CORS(app)
 
 
@@ -30,9 +30,9 @@ CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///darkroom.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=7) 
-# app.config['JWT_SECRET_KEY'] = 'EdwinSharonBakariBarkleyFavoured'
+
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=7)
+app.config['JWT_SECRET_KEY'] = 'EdwinSharonBakariBarkleyFavoured'
 
 migrate = Migrate(app, db)
 db.init_app(app)
@@ -531,7 +531,7 @@ class PostResource(Resource):
         # posts = Post.query.all()
         # return jsonify({'message': 'Posts fetched successfully', 'status': 200, 'data': [post.to_dict() for post in posts]})
         posts = Post.query.options(joinedload(Post.movie), joinedload(Post.club), joinedload(Post.user)).all()
-        
+
         return jsonify({
             'message': 'Posts fetched successfully',
             'status': 200,
@@ -798,7 +798,7 @@ class CommentByID(Resource):
 
         return jsonify({'message': 'Comment successfully deleted', 'status': 200})
 
-api.add_resource(CommentByID, '/comments/<int:id>')   
+api.add_resource(CommentByID, '/comments/<int:id>')
 
 class FollowResource(Resource):
     @jwt_required()  # Ensure the user is logged in to follow/unfollow
@@ -1242,7 +1242,7 @@ class DeleteClubResource(Resource):
 
         # Delete the club from the UserClub relationship (the many-to-many table)
         db.session.delete(user_club)
-        
+
         # Delete the club itself
         db.session.delete(club)
         db.session.commit()
@@ -1254,5 +1254,5 @@ api.add_resource(DeleteClubResource, '/clubs/delete')
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5555))  # Use environment variable or default to 5555
+    port = int(os.environ.get("PORT", 5000))  # Use environment variable or default to 5555
     app.run(host="0.0.0.0", port=port, debug=True)

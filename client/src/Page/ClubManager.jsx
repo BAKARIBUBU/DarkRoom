@@ -288,7 +288,7 @@
 //           const uploadedImageUrl = result.info.secure_url;
 //           setSelectedImage(uploadedImageUrl);
 //           console.log("Image uploaded to Cloudinary:", uploadedImageUrl);
-          
+
 //           // Send the uploaded image URL to the server to update the club's profile picture
 //           updateClubProfileImage(clubId, uploadedImageUrl);
 //         }
@@ -379,7 +379,7 @@
 //                     />
 //                   </div>
 //                 )}
-                
+
 //                 <h3 className="text-xl font-semibold text-gray-800">{club.name}</h3>
 //                 <button
 //                   onClick={() => handleLeaveClub(club.id)}
@@ -533,7 +533,7 @@
 //           const uploadedImageUrl = result.info.secure_url;
 //           setSelectedImage(uploadedImageUrl);
 //           console.log("Image uploaded to Cloudinary:", uploadedImageUrl);
-          
+
 //           // Send the uploaded image URL to the server to update the club's profile picture
 //           updateClubProfileImage(clubId, uploadedImageUrl);
 //         }
@@ -624,7 +624,7 @@
 //                     />
 //                   </div>
 //                 )}
-                
+
 //                 <h3 className="text-lg font-semibold text-black">{club.name}</h3>
 //                 <button
 //                   onClick={() => handleLeaveClub(club.id)}
@@ -1495,7 +1495,7 @@ const ClubManager = () => {
     }
     setLoading(true);
     try {
-      const response = await axios.post('http://127.0.0.1:5555/clubs', {
+      const response = await axios.post('http://127.0.0.1:5000/clubs', {
         name: newClubName,
         description: newClubDescription,
       }, {
@@ -1518,7 +1518,7 @@ const ClubManager = () => {
   const handleDeleteClub = async (clubId) => {
     setLoading(true);
     try {
-      const response = await axios.delete(`http://127.0.0.1:5555/clubs/${clubId}`, {
+      const response = await axios.delete(`http://127.0.0.1:5000/clubs/${clubId}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -1540,7 +1540,7 @@ const handleViewMore = async (clubId) => {
     setExpandedClubId(null); // Close the details if already expanded
   } else {
     try {
-      const response = await axios.get(`http://127.0.0.1:5555/clubs/${clubId}/details`, {
+      const response = await axios.get(`http://127.0.0.1:5000/clubs/${clubId}/details`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
