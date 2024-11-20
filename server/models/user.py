@@ -10,7 +10,7 @@ class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
 
 
-    serialize_rules = ('-_password_hash','-posts','-comments','-ratings','-clubs','-club_users','-followers','-following',)
+    serialize_rules = ('-_password_hash','-posts','-comments','-ratings','-club_users','-followers','-following',)
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True, nullable=False)
