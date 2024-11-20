@@ -11,8 +11,6 @@ const api = axios.create({
 export const createPostWithMovie = async (user_id, club_id, content, movie_title, movie_poster_url) => {
   try {
     const response = await api.post('/posts', { user_id, club_id, content, movie_title, movie_poster_url });
-    console.log(response);
-    
     return response.data.data;
   } catch (error) {
     console.error('Error creating post:', error);
@@ -20,7 +18,6 @@ export const createPostWithMovie = async (user_id, club_id, content, movie_title
   }
 };
 
-// Get all posts
 export const getPosts = async () => {
   try {
     const response = await api.get('/posts');
@@ -60,18 +57,12 @@ export const getPosts = async () => {
 
 // Fetch comments for a specific post
 export const getComments = async (post_id) => {
-  console.log("Post ID:", post_id)
-  const token = localStorage.getItem('token');  // Assuming the token is stored in localStorage
-  console.log("JWT Token:", token);
-  
   try {
     const response = await api.get(`/comments/${post_id}`, {
       headers: {
         Authorization: `Bearer ${token}`,  // Send the JWT token in the Authorization header
       },
     });
-    console.log(response);
-    console.log("Fetched comments:", response.data.data);
     return response.data.data;
    } catch (error) {
     console.error('Error fetching comments:', error);
@@ -79,7 +70,6 @@ export const getComments = async (post_id) => {
   }
 };
 
-// Create a new comment for a specific post
 export const createComment = async (post_id, commentData) => {
   console.log("Post ID:", post_id)
   console.log("Comment Data:", commentData);
@@ -93,8 +83,6 @@ export const createComment = async (post_id, commentData) => {
         Authorization: `Bearer ${token}`,  // Send the JWT token in the Authorization header
       },
     });
-    console.log(response);
-    console.log("Fetched comments:", response.data.data);
     return response.data.data;
   } catch (error) {
     console.error('Error creating comment:', error);
