@@ -9,10 +9,10 @@ import Dashboard from "./Page/Dashboard";
 import ProfilePage from "./Page/ProfilePage";
 import PostPage from "./Page/PostPage";
 import Movie from "./Page/Movie";
-import ClubsManager from "./Page/ClubManager"; 
-import PostList from "./components/Post/PostList"; 
-import CreatePostForm from "./components/Post/CreatePostForm"; 
-import UserProfile from "./Page/UserProfile"; 
+import ClubsManager from "./Page/ClubManager";
+import PostList from "./components/Post/PostList";
+import CreatePostForm from "./components/Post/CreatePostForm";
+import UserProfile from "./Page/UserProfile";
 import { createPostWithMovie } from './api/api';
 
 const App = () => {
@@ -55,8 +55,8 @@ const App = () => {
 
   const handleCreatePost = async (content, movieTitle, moviePosterUrl) => {
     try {
-      const userId = user ? user.id : null; 
-      const clubId = 1; 
+      const userId = user ? user.id : null;
+      const clubId = 1;
       const newPost = await createPostWithMovie(userId, clubId, content, movieTitle, moviePosterUrl);
 
       setPosts((prevPosts) => [...(Array.isArray(prevPosts) ? prevPosts : []), newPost]);
