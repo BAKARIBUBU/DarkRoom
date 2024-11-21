@@ -44,6 +44,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+        # Install pytest before running the tests
+      - name: Install pytest
+        run: |
+            cd server
+            pip install pytest  # Ensure pytest is installed
         # Uncomment the following line to run Flask Backend Tests when ready.
       - name: Run Flask Backend Tests
         run: |
