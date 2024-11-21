@@ -14,6 +14,8 @@ import PostList from "./components/Post/PostList";
 import CreatePostForm from "./components/Post/CreatePostForm";
 import UserProfile from "./Page/UserProfile";
 import { createPostWithMovie } from './api/api';
+import FollowingList from './components/Follow/FollowingList';
+import FollowersList from './components/Follow/FollowersList';
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -93,6 +95,8 @@ const AppContent = ({ isAuthenticated, user, setUser, posts, handleCreatePost })
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage onLogin={setUser} />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/following/:userId" element={<FollowingList />} />
+          <Route path="/followers/:userId" element={<FollowersList />} />
 
           {/* Protected Route for Dashboard */}
           <Route
