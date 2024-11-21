@@ -41,6 +41,8 @@ const Navbar = () => {
         <div className="hidden md:flex items-center space-x-8">
           {/* Links for homepage, movie, club, post */}
           <Link to="/" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Home</Link>
+          {/* <Link to="/user" className="text-white text-lg font-semibold hover:text-[#1abc9c]">User</Link> */}
+          <Link to={`/user/${user?.id || 1}`} className="text-white text-lg font-semibold hover:text-[#1abc9c]">User</Link>
           <Link to="/movies" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Movies</Link>
           <Link to="/clubs" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Clubs</Link>
           <Link to="/posts" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Posts</Link>
@@ -85,6 +87,7 @@ const Navbar = () => {
       <div className={`${isMobileMenuOpen ? "block" : "hidden"} md:hidden bg-gradient-to-r from-[#2c3e50] to-[#34495e] p-4 space-y-4`}>
         {/* Links for homepage, movie, club, post */}
         <Link to="/" className="block text-white text-lg font-semibold py-2 px-4 rounded-lg hover:bg-[#1abc9c]">Home</Link>
+        {/* <Link to="/user" className="block text-white text-lg font-semibold py-2 px-4 rounded-lg hover:bg-[#1abc9c]">User</Link> */}
         <Link to="/movies-tracking" className="block text-white text-lg font-semibold py-2 px-4 rounded-lg hover:bg-[#1abc9c]">Movies</Link>
         <Link to="/clubs" className="block text-white text-lg font-semibold py-2 px-4 rounded-lg hover:bg-[#1abc9c]">Clubs</Link>
         <Link to="/posts" className="block text-white text-lg font-semibold py-2 px-4 rounded-lg hover:bg-[#1abc9c]">Posts</Link>
