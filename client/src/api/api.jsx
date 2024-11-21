@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:5000', 
+  baseURL: 'https://darkroombackend.onrender.com',
   headers: {
     'Content-Type': 'application/json',
   }
@@ -16,13 +16,13 @@ export const createPostWithMovie = async (user_id, club_id, content, movie_title
       throw new Error('Authorization token is missing');
     }
 
-    const response = await api.post('/posts', 
-      { 
-        user_id, 
-        club_id, 
-        content, 
-        movie_title, 
-        movie_poster_url 
+    const response = await api.post('/posts',
+      {
+        user_id,
+        club_id,
+        content,
+        movie_title,
+        movie_poster_url
       },
       {
         headers: {
@@ -56,7 +56,7 @@ export const getPosts = async () => {
 //   try {
 //     const response = await api.get('/posts');
 //     console.log('Fetched posts:', response.data.data);
-    
+
 //     return response.data.data;
 //   } catch (error) {
 //     console.error('Error fetching posts:', error);
@@ -66,13 +66,13 @@ export const getPosts = async () => {
 
 export const getComments = async (post_id) => {
   console.log("Post ID:", post_id)
-  const token = localStorage.getItem('access_token');  
+  const token = localStorage.getItem('access_token');
   // console.log("JWT Token:", token);
-  
+
   try {
     const response = await api.get(`/comments/${post_id}`, {
       headers: {
-        Authorization: `Bearer ${token}`,  
+        Authorization: `Bearer ${token}`,
       },
     });
     // console.log(response);
@@ -89,7 +89,7 @@ export const createComment = async (post_id, commentData) => {
   console.log("Post ID:", post_id)
   console.log("Comment Data:", commentData);
 
-  const token = localStorage.getItem('access_token');  
+  const token = localStorage.getItem('access_token');
   // console.log("JWT Token:", token);
 
   try {
@@ -97,7 +97,7 @@ export const createComment = async (post_id, commentData) => {
       { content: commentData },
         {
       headers: {
-        Authorization: `Bearer ${token}`,  
+        Authorization: `Bearer ${token}`,
       },
     });
     console.log("Payload Sent:", { text: commentData });
@@ -113,7 +113,7 @@ export const createComment = async (post_id, commentData) => {
 export const followUser = async (followedId) => {
   return axios.post(`${api}/follow`, { followed_id: followedId }, {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`, 
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
     },
   });
 };
