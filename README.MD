@@ -22,9 +22,9 @@ Darkroom is a Movies/Series Club app designed to enhance the user experience thr
 
 ## Screenshots
 
-![Dark theme](![alt text](image-2.png))
+![Movies page](image-2.png)
 
-![Light theme](![alt text](image-1.png))
+![Home Page](image-1.png))
 
 ## Project Structure
 
