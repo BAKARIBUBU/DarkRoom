@@ -25,8 +25,8 @@ CORS(app, origins=["https://darkroomfrontend.onrender.com"])
 
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://darkroomdatabase_user:KxMwejXXBjMiztxk7JLASeWmXyeg77KS@dpg-cslikbbv2p9s7386jhcg-a.oregon-postgres.render.com/darkroomdatabase'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///darkroom.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://darkroom_user:zmeq2GCjr5jeLhY15srMHprPXZ2bzI87@dpg-csvh60aj1k6c73c68ti0-a.oregon-postgres.render.com/darkroom'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
