@@ -86,7 +86,7 @@ const Navbar = () => {
         {/* Links for homepage, movie, club, post */}
         <Link to="/" className="block text-white text-lg font-semibold py-2 px-4 rounded-lg hover:bg-[#1abc9c]">Home</Link>
         <Link to="/movies-tracking" className="block text-white text-lg font-semibold py-2 px-4 rounded-lg hover:bg-[#1abc9c]">Movies</Link>
-        <Link to="/clubs" className="block text-white text-lg font-semibold py-2 px-4 rounded-lg hover:bg-[#1abc9c]">Clubs</Link>
+        <Link to="/clubs-manager" className="block text-white text-lg font-semibold py-2 px-4 rounded-lg hover:bg-[#1abc9c]">Clubs</Link>
         <Link to="/posts" className="block text-white text-lg font-semibold py-2 px-4 rounded-lg hover:bg-[#1abc9c]">Posts</Link>
         {user ? (
           <>
