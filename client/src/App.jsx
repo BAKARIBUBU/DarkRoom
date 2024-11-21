@@ -43,7 +43,7 @@ const App = () => {
         setPosts(storedPosts);
       } else {
         try {
-          const response = await fetch("http://localhost:5000/posts");
+          const response = await fetch("https://darkroombackend.onrender.com/posts");
           const fetchedPosts = await response.json();
           setPosts(fetchedPosts);
           localStorage.setItem("posts", JSON.stringify(fetchedPosts));
