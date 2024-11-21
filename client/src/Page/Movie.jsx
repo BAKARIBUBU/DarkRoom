@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import RatingComponent from "../components/RatingComponent";
 
 const Movie = () => {
   const [movies, setMovies] = useState([]);
@@ -224,6 +225,8 @@ const Movie = () => {
               <p className="text-xl text-gray-700 mb-2">Genre: {selectedMovie.genre}</p>
               <p className="text-lg text-gray-700 mb-2">Release Year: {selectedMovie.release_year}</p>
               <p className="text-gray-600">{selectedMovie.description}</p>
+              {/* Embed Ratings Component */}
+              <RatingComponent movieId={selectedMovie.id} />
             </div>
           </div>
         </div>
