@@ -20,7 +20,7 @@ const ProfilePage = () => {
     if (userId) {
       const fetchUser = async () => {
         try {
-          const response = await axios.get(`https://darkroombackend.onrender.com/${userId}`);
+          const response = await axios.get(`https://darkroombackend.onrender.com/users/${userId}`);
           setUser(response.data.data);
           setFormData({
             username: response.data.data.username,
