@@ -845,6 +845,22 @@ class FollowResource(Resource):
 
 api.add_resource(FollowResource, '/follow')
 
+# class UserPosts(Resource):
+#     def get(self, user_id):
+#         # Fetch posts for the given user_id
+#         posts = Post.query.filter_by(user_id=user_id).all()
+
+#         if not posts:
+#             return jsonify({'message': 'No posts found for this user.'}), 404
+
+#         # Use list comprehension and the `to_dict()` method to convert the posts
+#         posts_data = [post.to_dict() for post in posts]
+
+#         return jsonify({'data': posts_data}), 200
+
+# api.add_resource(UserPosts, '/users/<int:user_id>/posts')
+
+
 # User's Followers
 class UserFollowers(Resource):
     @jwt_required()  # Ensure the user is logged in
