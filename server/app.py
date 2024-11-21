@@ -588,6 +588,7 @@ class PostResource(Resource):
         return jsonify({'message': 'Post created successfully', 'status': 201, 'data': new_post.to_dict()})
 
 api.add_resource(PostResource, '/posts')
+
 @classmethod
 def create_post_with_movie(cls, user_id, club_id, content, movie_title, movie_poster_url):
     # Find or create the movie
@@ -1459,5 +1460,5 @@ api.add_resource(DeleteClubResource, '/clubs/delete')
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))  # Use environment variable or default to 5555
+    port = int(os.environ.get("PORT", 5555))  # Use environment variable or default to 5555
     app.run(host="0.0.0.0", port=port, debug=True)
