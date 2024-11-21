@@ -1,71 +1,44 @@
-import React, { useState, useEffect } from "react";
-import { getPosts } from "../../api/api";
-import PostCard from "./PostCard";
+import React, { useState, useEffect } from 'react';
+import { getPosts } from '../../api/api';
+import PostCard from './PostCard';
 
-const PostList = ({ posts = [] }) => {
-  const [fetchedPosts, setFetchedPosts] = useState([]);
+const PostList = () => {
+  const [posts, setPosts] = useState([]);
 
+  // Fetch posts whenever the component mounts or when a post is added
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const postsData = await getPosts();
+        setPosts(postsData); // Update state when posts are fetched
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      }
+    };
+
+    fetchPosts();
+  }, []); // Fetch posts when the component mounts
+
+  // Fetch posts again when the posts array is updated (e.g., after adding a post)
   useEffect(() => {
     if (posts.length === 0) {
       getPosts()
-        .then((data) => setFetchedPosts(data))
+        .then((data) => setPosts(data))
         .catch((error) => console.error("Error fetching posts:", error));
     }
-  }, [posts]);
-
-  const displayPosts = posts.length > 0 ? posts : fetchedPosts;
+  }, [posts]); // Dependency on posts state
 
   return (
-    <div className="max-w-2xl mx-auto p-4 space-y-4">
-      {displayPosts.filter(Boolean).length > 0 ? (
-        displayPosts.filter(Boolean).map((post) => (
+    <div className="post-list">
+      {posts.length > 0 ? (
+        posts.map(post => (
           <PostCard key={post.id} post={post} />
         ))
       ) : (
-        <p className="text-center text-gray-500">No posts to display.</p>
+        <p>No posts available</p>
       )}
     </div>
   );
 };
 
 export default PostList;
-
-
-
-
-// import React, { useState, useEffect } from 'react';
-// import { getPosts } from '../../api/api';
-// import PostCard from './PostCard';
-
-// const PostList = ({ posts = [] }) => {
-//   const [fetchedPosts, setFetchedPosts] = useState([]);
-
-//   useEffect(() => {
-//     if (posts.length === 0) {
-//       getPosts()
-//         .then((data) => setFetchedPosts(data))
-//         .catch((error) => console.error("Error fetching posts:", error));
-//     }
-//   }, [posts]);
-
-//   console.log(posts);
-
-
-//   const displayPosts = posts.length > 0 ? posts : fetchedPosts;
-
-//   return (
-//     <div className="max-w-4xl mx-auto p-4 space-y-6">
-//       {displayPosts.filter(Boolean).length > 0 ? (
-//         displayPosts
-//           .filter(Boolean)
-//           .map((post) => (
-//             <PostCard key={post.id} post={post} />
-//           ))
-//       ) : (
-//         <p className="text-center text-gray-500">No posts to display.</p>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default PostList;
