@@ -1,6 +1,11 @@
 from faker import Faker
 from random import choice
-from models import db, User, Movie, Club, Post, Comment
+from models.db import db
+from models.user import User
+from models.movie import Movie
+from models.club import Club
+from models.post import Post 
+from models.comment import Comment
 from werkzeug.security import generate_password_hash
 from app import app
 from models.club import Club
