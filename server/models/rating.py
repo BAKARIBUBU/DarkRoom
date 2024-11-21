@@ -5,7 +5,7 @@ from sqlalchemy.sql import func
 class Rating(db.Model,SerializerMixin):
     __tablename__ = 'ratings'
     
-    serialize_rules= ('-user_id','-movie_id',)
+    serialize_rules= ('-user','-movie','-movie','-user',)
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)

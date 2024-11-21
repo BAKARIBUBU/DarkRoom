@@ -1,20 +1,21 @@
 from models.db import db
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.sql import func
-from models.movie import Movie
+from models import Movie
+
 
 class Post(db.Model, SerializerMixin):
     __tablename__ = 'posts'
 
-    serialize_rules = ('-user_id', '-movie_id', '-club_id', '-comments', '-movies')  # Exclude unnecessary fields
 
+    serialize_rules = ('-user_id', '-movie_id', '-club_id', 'movie.title', 'movie.poster_url')
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     movie_id = db.Column(db.Integer, db.ForeignKey('movies.id'), nullable=True)
     content = db.Column(db.String)
     club_id = db.Column(db.Integer, db.ForeignKey('clubs.id'), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now(), nullable=False)
-    updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now(), nullable=False)
+    updated_at = db.Column(db.DateTime(timezone=True), server_default=func.now(),onupdate=func.now(), nullable=False)
 
     comments = db.relationship('Comment', back_populates='post', cascade='all, delete-orphan')
     movie = db.relationship('Movie', back_populates='posts')
@@ -23,23 +24,22 @@ class Post(db.Model, SerializerMixin):
 
     @classmethod
     def create_post_with_movie(cls, user_id, club_id, content, movie_title, movie_poster_url):
-        # Check if the movie already exists
         movie = Movie.query.filter_by(title=movie_title, poster_url=movie_poster_url).first()
         
-        # If the movie does not exist, create it
+        
         if not movie:
             movie = Movie(title=movie_title, poster_url=movie_poster_url)
             db.session.add(movie)
             db.session.commit()
 
-        # Create the new post with the existing or new movie ID
-        new_post = cls(user_id=user_id, club_id=club_id, content=content, movie_id=movie.id)
+        
+        new_post = cls(user_id=user_id, club_id=club_id, content=content, movie_id=movie.id,updated_at=func.now())
         db.session.add(new_post)
         db.session.commit()
 
         return new_post
 
-    # Accessor methods to get movie title and poster URL directly from the related movie
+    
     @property
     def movie_title(self):
         return self.movie.title if self.movie else None
@@ -47,3 +47,4 @@ class Post(db.Model, SerializerMixin):
     @property
     def movie_poster_url(self):
         return self.movie.poster_url if self.movie else None
+
