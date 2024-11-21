@@ -21,7 +21,7 @@ const Movie = () => {
   const fetchMovies = async () => {
     try {
       const token = localStorage.getItem("access_token");
-      const response = await axios.get("http://127.0.0.1:5000/movies", {
+      const response = await axios.get("https://darkroombackend.onrender.com/movies", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -61,7 +61,7 @@ const Movie = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("access_token");
-      await axios.post("http://127.0.0.1:5000/movies", form, {
+      await axios.post("https://darkroombackend.onrender.com/movies", form, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

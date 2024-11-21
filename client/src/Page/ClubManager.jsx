@@ -1355,7 +1355,7 @@ const ClubManager = () => {
   const fetchClubs = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://127.0.0.1:5000/clubs', {
+      const response = await axios.get('https://darkroombackend.onrender.com/clubs', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -1378,7 +1378,7 @@ const ClubManager = () => {
   const fetchUserClubs = async (userId) => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://127.0.0.1:5000/users/${userId}/clubs`, {
+      const response = await axios.get(`https://darkroombackend.onrender.com/users/${userId}/clubs`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -1401,7 +1401,7 @@ const ClubManager = () => {
   const handleJoinClub = async (clubId) => {
     setLoading(true);
     try {
-      const response = await axios.post('http://127.0.0.1:5000/clubs/join', {
+      const response = await axios.post('https://darkroombackend.onrender.com/clubs/join', {
         user_id: userId,
         club_id: clubId,
       }, {
@@ -1423,7 +1423,7 @@ const ClubManager = () => {
   const handleLeaveClub = async (clubId) => {
     setLoading(true);
     try {
-      const response = await axios.delete(`http://127.0.0.1:5000/clubs/leave/${userId}/${clubId}`, {
+      const response = await axios.delete(`https://darkroombackend.onrender.com/clubs/leave/${userId}/${clubId}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -1471,7 +1471,7 @@ const ClubManager = () => {
   const updateClubProfileImage = async (clubId, imageUrl) => {
     try {
       const response = await axios.put(
-        `http://127.0.0.1:5555/clubs/${clubId}/updateProfileImage`,
+        `https://darkroombackend.onrender.com/clubs/${clubId}/updateProfileImage`,
         { profileImage: imageUrl },
         {
           headers: {
@@ -1495,7 +1495,7 @@ const ClubManager = () => {
     }
     setLoading(true);
     try {
-      const response = await axios.post('http://127.0.0.1:5000/clubs', {
+      const response = await axios.post('https://darkroombackend.onrender.com/clubs', {
         name: newClubName,
         description: newClubDescription,
       }, {
@@ -1518,7 +1518,7 @@ const ClubManager = () => {
   const handleDeleteClub = async (clubId) => {
     setLoading(true);
     try {
-      const response = await axios.delete(`http://127.0.0.1:5000/clubs/${clubId}`, {
+      const response = await axios.delete(`https://darkroombackend.onrender.com/clubs/${clubId}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -1540,7 +1540,7 @@ const handleViewMore = async (clubId) => {
     setExpandedClubId(null); // Close the details if already expanded
   } else {
     try {
-      const response = await axios.get(`http://127.0.0.1:5000/clubs/${clubId}/details`, {
+      const response = await axios.get(`https://darkroombackend.onrender.com/clubs/${clubId}/details`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

@@ -19,15 +19,15 @@ api = Api(app)
 # allowed_origins = [
 #     "http://localhost:5173",
 # ]
-CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+CORS(app, resources={r"/*": {"origins": "https://darkroombackend.onrender.com"}})
 
 # CORS(app, resources={r"/*": {"origins": allowed_origins}})
 # CORS(app, origins="http://localhost:5173")
 # CORS(app)
 
 
-# #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://darkroomdatabase_user:KxMwejXXBjMiztxk7JLASeWmXyeg77KS@dpg-cslikbbv2p9s7386jhcg-a.oregon-postgres.render.com/darkroomdatabase'  # Example URI
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///darkroom.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://darkroomdatabase_user:KxMwejXXBjMiztxk7JLASeWmXyeg77KS@dpg-cslikbbv2p9s7386jhcg-a.oregon-postgres.render.com/darkroomdatabase'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///darkroom.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
@@ -46,9 +46,9 @@ jwt = JWTManager(app)
 
 # Define a basic route
 
-@app.route('/')
-def home():
-    return "Hello, Render! Your Flask app is running. welcome back"
+# @app.route('/')
+# def home():
+#     return "Hello, Render! Your Flask app is running. welcome back"
 
 class UsersResource(Resource):
     def get(self):
