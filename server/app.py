@@ -1253,6 +1253,26 @@ class DeleteClubResource(Resource):
 # Adding the new resource to the API
 api.add_resource(DeleteClubResource, '/clubs/delete')
 
+class UserPosts(Resource):
+    def get(self, user_id):
+        # Check if the user exists
+        user = User.query.filter_by(id=user_id).first()
+        if not user:
+            return jsonify({'message': 'User not found', 'status': 404})
+
+        # Fetch posts created by this user
+        posts = Post.query.filter_by(user_id=user_id).all()
+
+        return jsonify({
+            'message': 'User posts fetched successfully',
+            'status': 200,
+            'data': [post.to_dict() for post in posts]  # Assuming Post has a `to_dict` method
+        })
+
+# Register the resource with the API
+api.add_resource(UserPosts, '/users/<int:user_id>/posts')
+
+
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))  # Use environment variable or default to 5555
