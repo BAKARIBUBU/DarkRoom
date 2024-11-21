@@ -214,7 +214,7 @@ Open your browser and navigate to `https://darkroombackend.onrender.com`
   - [Pipenv](https://pipenv.pypa.io/)
   - [Python 3.12](https://www.python.org/)
   - [Node.js](https://nodejs.org/)
-  - [Postgresql] (https://www.postgresql.org/)
+  - [Postgresql](https://www.postgresql.org/)
 
 ## Contributing
 
