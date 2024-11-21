@@ -41,8 +41,8 @@ const Navbar = () => {
         <div className="hidden md:flex items-center space-x-8">
           {/* Links for homepage, movie, club, post */}
           <Link to="/" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Home</Link>
-          <Link to="/movies" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Movies</Link>
-          <Link to="/clubs" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Clubs</Link>
+          <Link to="/movies-tracking" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Movies</Link>
+          <Link to="/clubs-manager" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Clubs</Link>
           <Link to="/posts" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Posts</Link>
 
           {user ? (
