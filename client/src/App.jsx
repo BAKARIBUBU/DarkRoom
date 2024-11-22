@@ -69,6 +69,13 @@ const App = () => {
   // }, [posts]); // Runs when posts change
   
 
+    // Fetch posts again when the posts array is updated (e.g., after adding a post)
+  useEffect(() => {
+      console.log(posts);
+      
+      getPosts()
+  }, [posts]); 
+
   const handleCreatePost = async (content, movieTitle, moviePosterUrl) => {
     try {
       const userId = user ? user.id : null;
@@ -172,3 +179,4 @@ const AppContent = ({ isAuthenticated, user, setUser, posts, handleCreatePost, f
 };
 
 export default App;
+
