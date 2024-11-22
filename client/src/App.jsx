@@ -13,13 +13,14 @@ import ClubsManager from "./Page/ClubManager";
 import PostList from "./components/Post/PostList"; 
 import CreatePostForm from "./components/Post/CreatePostForm"; 
 import UserProfile from "./Page/UserProfile"; 
-import { createPostWithMovie } from './api/api';
+import { createPostWithMovie,getPosts } from './api/api';
 import FollowingList from './components/Follow/FollowingList';
 import FollowersList from './components/Follow/FollowersList';
 
 const App = () => {
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
+  const [formVisible, setFormVisible] = useState(false); // State to track form visibility
 
   const isAuthenticated = () => {
     const token = localStorage.getItem("access_token");
@@ -35,7 +36,6 @@ const App = () => {
     if (storedUser.id) setUser(storedUser);
   }, []);
 
-  // Fetch posts from the server or localStorage
   useEffect(() => {
     const fetchPosts = async () => {
       const storedPosts = JSON.parse(localStorage.getItem("posts"));
@@ -55,14 +55,23 @@ const App = () => {
     fetchPosts();
   }, []);
 
+    // Fetch posts again when the posts array is updated (e.g., after adding a post)
+  useEffect(() => {
+      console.log(posts);
+      
+      getPosts()
+  }, [posts]); 
+
   const handleCreatePost = async (content, movieTitle, moviePosterUrl) => {
     try {
-      const userId = user ? user.id : null; 
+      const userId = user ? user.id : null;
       const clubId = 1; 
       const newPost = await createPostWithMovie(userId, clubId, content, movieTitle, moviePosterUrl);
 
       setPosts((prevPosts) => [...(Array.isArray(prevPosts) ? prevPosts : []), newPost]);
       localStorage.setItem("posts", JSON.stringify([...posts, newPost]));
+      
+      setFormVisible(false); // Hide the form after submit
     } catch (error) {
       console.error("Failed to create post:", error);
     }
@@ -76,15 +85,16 @@ const App = () => {
         setUser={setUser}
         posts={posts}
         handleCreatePost={handleCreatePost}
+        formVisible={formVisible}
+        setFormVisible={setFormVisible} // Pass down setter to toggle form visibility
       />
     </Router>
   );
 };
 
-const AppContent = ({ isAuthenticated, user, setUser, posts, handleCreatePost }) => {
-  const location = useLocation(); // Get the current route location
+const AppContent = ({ isAuthenticated, user, setUser, posts, handleCreatePost, formVisible, setFormVisible }) => {
+  const location = useLocation(); 
 
-  // Don't render footer on the /dashboard route
   const shouldShowFooter = location.pathname !== "/dashboard";
 
   return (
@@ -133,7 +143,13 @@ const AppContent = ({ isAuthenticated, user, setUser, posts, handleCreatePost })
             path="/posts"
             element={
               <div className="container mx-auto px-4">
-                <CreatePostForm onSubmit={handleCreatePost} />
+                <button
+                  onClick={() => setFormVisible(prev => !prev)} // Toggle form visibility
+                  className="bg-blue-500 text-white py-2 px-4 rounded-lg mb-4"
+                >
+                  {formVisible ? "Close Form" : "Submit Post"}
+                </button>
+                {formVisible && <CreatePostForm onSubmit={handleCreatePost} />}
                 <PostList posts={posts} />
               </div>
             }
@@ -149,3 +165,4 @@ const AppContent = ({ isAuthenticated, user, setUser, posts, handleCreatePost })
 };
 
 export default App;
+
