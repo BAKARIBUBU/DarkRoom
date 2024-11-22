@@ -136,8 +136,6 @@ Ensure you have the following installed on your machine:
 
         So my new github repository will consequently be named `DARKROOM`
 
-        ![Creating a new repo](https://i.ibb.co/kQ7VHVv/flask-react-starter-creating-a-new-repo.png)
-
     - ***Note***: Do not initalize the repository with a `README.md` file, a `.gitignore` file or a `LICENSE.md` file as demonstrated below
 
         ![Repo setup](https://i.ibb.co/TYKBBJ6/flask-react-starter-repo-setup.png)
