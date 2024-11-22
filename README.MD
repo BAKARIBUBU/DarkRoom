@@ -264,4 +264,4 @@ This project is licensed under the [MIT License](LICENSE).
 
 ### Contact
 
-For any questions or feedback, please contact **Sharon Kahira** at [wanjiku.kahira@gmail.com](wanjiku.kahira@gmail.com),**Bakari Bubu** at [bakaribubu@gmail.com](bakaribubu@gmail.com),**Favoured Mwange** at [mwangefavoured@gmail.com](mwangefavoured@gmail.com),**Edwin Nganga** at []() ,**Barkley Igonyi** [Igonyibarkley00@gmail.com](Igonyibarkley00@gmail.com)
+For any questions or feedback, please contact **Sharon Kahira** at [wanjiku.kahira@gmail.com](wanjiku.kahira@gmail.com),**Bakari Bubu** at [bakaribubu@gmail.com](bakaribubu@gmail.com),**Favoured Mwange** at [mwangefavoured@gmail.com](mwangefavoured@gmail.com),**Edwin Nganga** at [moyiedwin8@gmail.com](moyiedwin8@gmail.com) ,**Barkley Igonyi** [Igonyibarkley00@gmail.com](Igonyibarkley00@gmail.com)
