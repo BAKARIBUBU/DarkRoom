@@ -18,6 +18,8 @@ const UserProfile = ({ userId }) => {
         // Fetch user details
         const userResponse = await axios.get(`http://127.0.0.1:5000/users/${userId}`);
         const userData = userResponse.data.data;
+        console.log(userData);
+        
         setUsername(userData.username);
         setProfilePicture(userData.profile_picture);
 
