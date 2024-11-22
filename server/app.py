@@ -20,8 +20,9 @@ api = Api(app)
 #     "http://localhost:5173",
 # ]
 # CORS(app, resources={r"/*": {"origins": "https://darkroombackend.onrender.com"}})
-CORS(app, origins=["https://darkroomfrontend.onrender.com"])
-# CORS (app)
+# CORS(app, origins=["https://darkroomfrontend.onrender.com"])
+# # CORS (app)
+CORS(app, resources={r"/*": {"origins": ["https://darkroomfrontend.onrender.com", "http://localhost:5173"]}})
 
 
 
