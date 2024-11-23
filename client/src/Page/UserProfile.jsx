@@ -16,7 +16,7 @@ const UserProfile = ({ userId }) => {
     const fetchData = async () => {
       try {
         // Fetch user details
-        const userResponse = await axios.get(`http://127.0.0.1:5000/users/${userId}`);
+        const userResponse = await axios.get(`https://darkroombackend.onrender.com/users/${userId}`);
         const userData = userResponse.data.data;
         setUsername(userData.username);
         setProfilePicture(userData.profile_picture);
@@ -57,15 +57,15 @@ const UserProfile = ({ userId }) => {
     <div className="max-w-4xl mx-auto p-6">
       <div className="flex items-center justify-center mb-6">
         {profilePicture ? (
-          <img 
-            src={profilePicture} 
-            alt={`${username}'s profile`} 
+          <img
+            src={profilePicture}
+            alt={`${username}'s profile`}
             className="w-24 h-24 rounded-full object-cover border-4 border-gray-300"
           />
         ) : (
           <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
             No Profile Picture
-          </div> 
+          </div>
         )}
       </div>
       <h1 className="text-3xl font-semibold text-center text-gray-800 mb-4">{username}'s Profile</h1>
