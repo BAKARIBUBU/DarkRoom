@@ -29,6 +29,7 @@ const LoginPage = ({ onLogin }) => {
         localStorage.setItem('username', user.username);
         localStorage.setItem('user_profile_picture', user.profile_picture);
         localStorage.setItem('access_token', response.data.access_token);
+        
 
         // Call the onLogin callback to update the user state in the parent component
         onLogin(user);

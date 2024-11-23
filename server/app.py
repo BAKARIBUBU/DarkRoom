@@ -15,6 +15,14 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 app = Flask(__name__)
 api = Api(app)
+# username = os.getenv("DB_USERNAME")
+# password = os.getenv("DB_PASSWORD")
+# database_name = os.getenv("DB_NAME")
+# host = os.getenv("DB_HOST")
+# port = os.getenv("DB_PORT")
+
+# app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{username}:{password}@{host}:{port}/{database_name}'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://edwin_user:edwin1@localhost:5001/darkroom'
 
 # allowed_origins = [
 #     "http://localhost:5173",
@@ -26,8 +34,8 @@ CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 # CORS(app)
 
 
-# #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://darkroomdatabase_user:KxMwejXXBjMiztxk7JLASeWmXyeg77KS@dpg-cslikbbv2p9s7386jhcg-a.oregon-postgres.render.com/darkroomdatabase'  # Example URI
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///darkroom.db'
+
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///darkroom.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')

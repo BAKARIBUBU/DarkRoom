@@ -37,13 +37,19 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const getPosts = async () => {
       const storedPosts = JSON.parse(localStorage.getItem("posts"));
       if (storedPosts) {
+        console.log("storedposts",storedPosts);
+        
         setPosts(storedPosts);
       } else {
         try {
           const response = await fetch("http://localhost:5000/posts");
+          console.log("status",response.status);
+          console.log("headers",response.headers);
+
+          
           const fetchedPosts = await response.json();
           setPosts(fetchedPosts);
           localStorage.setItem("posts", JSON.stringify(fetchedPosts));
@@ -52,7 +58,9 @@ const App = () => {
         }
       }
     };
-    fetchPosts();
+    getPosts();
+    console.log("getPosts",getPosts);
+    
   }, []);
 
     // Fetch posts again when the posts array is updated (e.g., after adding a post)
@@ -62,19 +70,6 @@ const App = () => {
       getPosts()
   }, [posts]); // Dependency on posts state
 
-  //   // This effect runs whenever posts change
-  // useEffect(() => {
-  //   console.log('Posts updated:', posts);
-  //   // You can also add other side effects here if needed
-  // }, [posts]); // Runs when posts change
-  
-
-    // Fetch posts again when the posts array is updated (e.g., after adding a post)
-  useEffect(() => {
-      console.log(posts);
-      
-      getPosts()
-  }, [posts]); 
 
   const handleCreatePost = async (content, movieTitle, moviePosterUrl) => {
     try {
@@ -179,4 +174,5 @@ const AppContent = ({ isAuthenticated, user, setUser, posts, handleCreatePost, f
 };
 
 export default App;
+//  const cleanedPosts = posts.filter(post => post !== null);
 

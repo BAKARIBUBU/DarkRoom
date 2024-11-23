@@ -40,6 +40,8 @@ export const createPostWithMovie = async (user_id, club_id, content, movie_title
   try {
 
     const token = localStorage.getItem('access_token');
+    console.log(token);
+    
 
     if (!token) {
       throw new Error('Authorization token is missing');
@@ -59,7 +61,7 @@ export const createPostWithMovie = async (user_id, club_id, content, movie_title
         },
       }
     );
-    // console.log(response);
+    console.log(response);
 
     return response.data.data;
   } catch (error) {
@@ -87,7 +89,7 @@ export const getPosts = async () => {
   try {
     const response = await api.get('/posts');
     const validPosts = response.data.data.filter(Boolean); // Remove null values
-    // console.log('Valid Posts:', validPosts); // Debugging
+    console.log('Valid Posts:', validPosts); // Debugging
     return validPosts;
   } catch (error) {
     console.error('Error fetching posts:', error);

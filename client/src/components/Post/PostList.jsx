@@ -6,11 +6,11 @@ const PostList = () => {
   const [posts, setPosts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   
-  //  // This effect runs whenever posts change
-  // useEffect(() => {
-  //   // Any side effects you want to run when posts change can be placed here
-  //   console.log('Posts updated:', posts);
-  // }, [posts]); 
+   // This effect runs whenever posts change
+  useEffect(() => {
+    // Any side effects you want to run when posts change can be placed here
+    console.log('Posts updated:', posts);
+  }, [posts]); 
 
   // Fetch posts whenever the component mounts
   useEffect(() => {
