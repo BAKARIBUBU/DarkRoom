@@ -46,6 +46,8 @@ const Navbar = () => {
           <Link to="/movies-tracking" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Movies</Link>
           <Link to="/clubs-manager" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Clubs</Link>
           <Link to="/posts" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Posts</Link>
+          <Link to="/profile" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Profle settings</Link>
+
 
           {user ? (
             <>
@@ -88,9 +90,11 @@ const Navbar = () => {
         {/* Links for homepage, movie, club, post */}
         <Link to="/" className="block text-white text-lg font-semibold py-2 px-4 rounded-lg hover:bg-[#1abc9c]">Home</Link>
         {/* <Link to="/user" className="block text-white text-lg font-semibold py-2 px-4 rounded-lg hover:bg-[#1abc9c]">User</Link> */}
+        <Link to={`/user/${user?.id || 1}`} className="text-white text-lg font-semibold hover:text-[#1abc9c]">User</Link>
         <Link to="/movies-tracking" className="block text-white text-lg font-semibold py-2 px-4 rounded-lg hover:bg-[#1abc9c]">Movies</Link>
         <Link to="/clubs-manager" className="block text-white text-lg font-semibold py-2 px-4 rounded-lg hover:bg-[#1abc9c]">Clubs</Link>
         <Link to="/posts" className="block text-white text-lg font-semibold py-2 px-4 rounded-lg hover:bg-[#1abc9c]">Posts</Link>
+        <Link to="/profile" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Profle settings</Link>
         {user ? (
           <>
             {/* Profile Link */}
@@ -130,8 +134,8 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;    
-{/* 
+export default Navbar;
+{/*
         {user ? (
           <>
             <span className="block text-white text-lg font-semibold">Welcome, {user.username}</span>

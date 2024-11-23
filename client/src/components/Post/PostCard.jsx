@@ -16,8 +16,8 @@ const PostCard = ({ post }) => {
         />
         <div className="flex-1">
           <div className="flex justify-between items-center">
-            <h3 className="text-sm font-semibold text-gray-900">{post.author || username}</h3>
-            <span className="text-xs text-gray-500">2h ago</span> {/* Replace with dynamic time */}
+            <h3 className="text-sm font-semibold text-gray-900">{post.user?.username || 'Anonymous'}</h3>
+            <span className="text-xs text-gray-500">awhile ago</span> {/* Replace with dynamic time */}
           </div>
           <p className="text-gray-700 text-sm mt-1">{post.content}</p>
           {post.movie && (
