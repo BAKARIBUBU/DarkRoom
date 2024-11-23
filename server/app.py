@@ -26,7 +26,10 @@ CORS(app, resources={r"/*": {"origins": ["https://darkroomfrontend.onrender.com"
 
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://darkroom_user:zmeq2GCjr5jeLhY15srMHprPXZ2bzI87@dpg-csvh60aj1k6c73c68ti0-a.oregon-postgres.render.com/darkroom'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://darkroom_user:zmeq2GCjr5jeLhY15srMHprPXZ2bzI87@dpg-csvh60aj1k6c73c68ti0-a.oregon-postgres.render.com/darkroom'
+
+app.config['SQLALCHEMY_DATABASE_URI'] ='postgresql://koyeb-adm:1GSdsXU3PZrc@ep-noisy-cell-a2bzz9kr.eu-central-1.pg.koyeb.app/koyebdb'
+
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
