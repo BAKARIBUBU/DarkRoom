@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { timeAgo } from "../utilis/time";
 
 const PostCard = ({ post }) => {
   // Retrieve the profile picture and username from local storage
@@ -17,7 +18,7 @@ const PostCard = ({ post }) => {
         <div className="flex-1">
           <div className="flex justify-between items-center">
             <h3 className="text-sm font-semibold text-gray-900">{post.user?.username || 'Anonymous'}</h3>
-            <span className="text-xs text-gray-500">awhile ago</span> {/* Replace with dynamic time */}
+            <span className="text-xs text-gray-500">{timeAgo(post.created_at)}</span>
           </div>
           <p className="text-gray-700 text-sm mt-1">{post.content}</p>
           {post.movie && (

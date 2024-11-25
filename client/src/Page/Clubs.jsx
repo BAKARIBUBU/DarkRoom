@@ -8,7 +8,10 @@ const Clubs = () => {
   useEffect(() => {
     const fetchClubs = async () => {
       try {
-        const response = await axios.get("https://darkroombackend.onrender.com/clubs");
+        const response = await axios.get(
+          "http://127.0.0.1:5000/clubs",
+          // "https://darkroombackend.onrender.com/clubs"
+        );
         setClubs(response.data.data);
       } catch (error) {
         console.error("Error fetching clubs:", error);

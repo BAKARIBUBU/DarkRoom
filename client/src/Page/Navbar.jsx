@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
@@ -46,7 +47,7 @@ const Navbar = () => {
           <Link to="/movies-tracking" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Movies</Link>
           <Link to="/clubs-manager" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Clubs</Link>
           <Link to="/posts" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Posts</Link>
-          <Link to="/profile" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Profle settings</Link>
+          {/* <Link to="/users/:userId/profile" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Profle settings</Link> */}
 
 
           {user ? (
@@ -94,7 +95,7 @@ const Navbar = () => {
         <Link to="/movies-tracking" className="block text-white text-lg font-semibold py-2 px-4 rounded-lg hover:bg-[#1abc9c]">Movies</Link>
         <Link to="/clubs-manager" className="block text-white text-lg font-semibold py-2 px-4 rounded-lg hover:bg-[#1abc9c]">Clubs</Link>
         <Link to="/posts" className="block text-white text-lg font-semibold py-2 px-4 rounded-lg hover:bg-[#1abc9c]">Posts</Link>
-        <Link to="/profile" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Profle settings</Link>
+        {/* <Link to="/profile" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Profle settings</Link> */}
         {user ? (
           <>
             {/* Profile Link */}

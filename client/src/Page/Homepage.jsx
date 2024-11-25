@@ -1,6 +1,7 @@
 import React from "react";
 import Clubs from "./Clubs"; // Import the Clubs component
 
+
 const HomePage = () => {
   return (
     <div>

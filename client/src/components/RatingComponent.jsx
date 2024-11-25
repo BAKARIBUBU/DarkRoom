@@ -14,7 +14,9 @@ const RatingComponent = ({ movieId }) => {
 
   const fetchRatings = async () => {
     try {
-      const response = await axios.get("https://darkroombackend.onrender.com/ratings", {
+      const response = await axios.get("http://127.0.0.1:5000/ratings",
+      // const response = await axios.get("https://darkroombackend.onrender.com/ratings", 
+        {
         params: { movie_id: movieId },
       });
       setRatings(response.data.data);
@@ -33,7 +35,8 @@ const RatingComponent = ({ movieId }) => {
     try {
       const token = localStorage.getItem("access_token");
       await axios.post(
-        "https://darkroombackend.onrender.com/ratings",
+        "http://127.0.0.1:5000/ratings",
+        // "https://darkroombackend.onrender.com/ratings",
         { ...form, movie_id: movieId },
         {
           headers: {
@@ -55,7 +58,10 @@ const RatingComponent = ({ movieId }) => {
   const handleDelete = async (ratingId) => {
     try {
       const token = localStorage.getItem("access_token");
-      await axios.delete(`https://darkroombackend.onrender.com/ratings/${ratingId}`, {
+      await axios.delete(
+        `http://127.0.0.1:5000/ratings/${ratingId}`,
+        // `https://darkroombackend.onrender.com/ratings/${ratingId}`, 
+        {
         headers: {
           Authorization: `Bearer ${token}`,
         },

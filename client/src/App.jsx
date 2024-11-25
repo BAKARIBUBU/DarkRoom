@@ -44,7 +44,9 @@ const App = () => {
         setPosts(storedPosts);
       } else {
         try {
-          const response = await fetch("https://darkroombackend.onrender.com/posts");
+          const response = await fetch(
+            // "https://darkroombackend.onrender.com/posts");
+            "http://127.0.0.1:5000/posts");
           const fetchedPosts = await response.json();
           setPosts(fetchedPosts);
           localStorage.setItem("posts", JSON.stringify(fetchedPosts));
@@ -58,17 +60,31 @@ const App = () => {
 
   const handleCreatePost = async (content, movieTitle, moviePosterUrl) => {
     try {
-      const userId = user ? user.id : null;
-      const clubId = 1;
-      const newPost = await createPostWithMovie(userId, clubId, content, movieTitle, moviePosterUrl);
+        const userId = user ? user.id : null;
+        const clubId = 1;
+        const newPost = await createPostWithMovie(userId, clubId, content, movieTitle, moviePosterUrl);
 
-      setPosts((prevPosts) => [...(Array.isArray(prevPosts) ? prevPosts : []), newPost]);
-      localStorage.setItem("posts", JSON.stringify([...posts, newPost]));
-      setIsFormVisible(false); // Hide form after submitting
+        // Update the posts state with the new post
+        setPosts((prevPosts) => [...prevPosts, newPost]); // Add the new post to the existing posts
+        localStorage.setItem("posts", JSON.stringify([...posts, newPost])); // Update localStorage if needed
+        setIsFormVisible(false); // Hide form after submitting
     } catch (error) {
-      console.error("Failed to create post:", error);
+        console.error("Failed to create post:", error);
     }
-  };
+};
+  // const handleCreatePost = async (content, movieTitle, moviePosterUrl) => {
+  //   try {
+  //     const userId = user ? user.id : null;
+  //     const clubId = 1;
+  //     const newPost = await createPostWithMovie(userId, clubId, content, movieTitle, moviePosterUrl);
+
+  //     setPosts((prevPosts) => [...(Array.isArray(prevPosts) ? prevPosts : []), newPost]);
+  //     localStorage.setItem("posts", JSON.stringify([...posts, newPost]));
+  //     setIsFormVisible(false); // Hide form after submitting
+  //   } catch (error) {
+  //     console.error("Failed to create post:", error);
+  //   }
+  // };
 
   const toggleFormVisibility = () => {
     setIsFormVisible((prevState) => !prevState);
@@ -111,6 +127,8 @@ const AppContent = ({ isAuthenticated, user, setUser, posts, handleCreatePost, i
             path="/dashboard"
             element={isAuthenticated() ? <Dashboard /> : <Navigate to="/login" />}
           />
+
+          {/* <Route path="/users/:userId/edit" component={<ProfilePage />} /> */}
 
           {/* Protected Route for Profile Page */}
           <Route

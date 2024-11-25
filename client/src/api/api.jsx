@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://darkroombackend.onrender.com', 
+  baseURL : 'http://127.0.0.1:5000',
+  // baseURL: 'https://darkroombackend.onrender.com', 
   headers: {
     'Content-Type': 'application/json',
   }
@@ -11,7 +12,10 @@ const api = axios.create({
 export const CheckFollowStatus = async (userId) => {
     const token = localStorage.getItem('access_token'); // Get the token from local storage
 
-    const response = await axios.get(`/follow/status/${userId}`, {
+    const response = await axios.get(
+      `http://127.0.0.1:5000/follow/status/${userId}`,
+      // `https://darkroombackend.onrender.com/follow/status/${userId}`,
+       {
         headers: {
             Authorization: `Bearer ${token}`, // Include the token in the headers
         },
@@ -59,7 +63,7 @@ export const createPostWithMovie = async (user_id, club_id, content, movie_title
         },
       }
     );
-    // console.log(response);
+    console.log(response);
 
     return response.data.data;
   } catch (error) {
@@ -68,32 +72,32 @@ export const createPostWithMovie = async (user_id, club_id, content, movie_title
   }
 };
 
-// export const getPosts = async (userId) => {
-//   try {
-//     // If userId is provided, fetch posts for that user; otherwise, fetch all posts
-//     const endpoint = userId ? `/users/${userId}/posts` : '/posts';
-//     const response = await api.get(endpoint);
-    
-//     const validPosts = response.data.data.filter(Boolean); // Remove null values
-//     console.log('Valid Posts:', validPosts); // Debugging
-//     return validPosts;
-//   } catch (error) {
-//     console.error('Error fetching posts:', error);
-//     throw error;
-//   }
-// };
-
-export const getPosts = async () => {
+export const getPosts = async (userId) => {
   try {
-    const response = await api.get('/posts');
+    // If userId is provided, fetch posts for that user; otherwise, fetch all posts
+    const endpoint = userId ? `/users/${userId}/posts` : '/posts';
+    const response = await api.get(endpoint);
+    
     const validPosts = response.data.data.filter(Boolean); // Remove null values
-    // console.log('Valid Posts:', validPosts); // Debugging
+    console.log('Valid Posts:', validPosts); // Debugging
     return validPosts;
   } catch (error) {
     console.error('Error fetching posts:', error);
     throw error;
   }
 };
+
+// export const getPosts = async () => {
+//   try {
+//     const response = await api.get('/posts');
+//     const validPosts = response.data.data.filter(Boolean); // Remove null values
+//     // console.log('Valid Posts:', validPosts); // Debugging
+//     return validPosts;
+//   } catch (error) {
+//     console.error('Error fetching posts:', error);
+//     throw error;
+//   }
+// };
 
 export const getComments = async (post_id) => {
   // console.log("Post ID:", post_id)
@@ -145,7 +149,8 @@ export const createComment = async (post_id, commentData) => {
 export const getFollowers = async (userId) => {
   // console.log("Fetching followers for user_id:", userId);
   const token = localStorage.getItem('access_token');
-  const url = `https://darkroombackend.onrender.com/users/${userId}/followers`;
+  // const url = `https://darkroombackend.onrender.com/users/${userId}/followers`;
+  const url = `http://127.0.0.1:5000/users/${userId}/followers`;
 
   try {
     const response = await axios.get(url, {
@@ -188,7 +193,9 @@ export const UnFollowUser = async (followedId) => {
   console.log("JWT Token:", token);
 
   try {
-    const response = await axios.delete(`https://darkroombackend.onrender.com/follow`, {
+    const response = await axios.delete(`http://127.0.0.1:5000/follow`,
+    // const response = await axios.delete(`https://darkroombackend.onrender.com/follow`, 
+      {
       data: { followed_id: followedId }, // Payload for the unfollow action
       headers: {
         Authorization: `Bearer ${token}`, // JWT for authorization
@@ -207,7 +214,9 @@ export const getFollowings = async (user_id) => {
   // console.log("Fetching followings for user_id:", user_id);
 
   try {
-    const response = await axios.get(`https://darkroombackend.onrender.com/users/${user_id}/following`, {
+     const response = await axios.get(`http://127.0.0.1:5000/users/${user_id}/following`,
+    //  const response = await axios.get(`https://darkroombackend.onrender.com/users/${user_id}/following`, 
+      {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('access_token')}`,
       },

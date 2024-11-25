@@ -20,7 +20,9 @@ const ProfilePage = () => {
     if (userId) {
       const fetchUser = async () => {
         try {
-          const response = await axios.get(`https://darkroombackend.onrender.com/users/${userId}`);
+          const response = await axios.get(
+            // `https://darkroombackend.onrender.com/users/${userId}`);
+            `http://127.0.0.1:5000/users/${userId}`);
           setUser(response.data.data);
           setFormData({
             username: response.data.data.username,
@@ -45,7 +47,10 @@ const ProfilePage = () => {
   // Handle profile update
   const handleSaveChanges = async () => {
     try {
-      const response = await axios.patch(`https://darkroombackend.onrender.com/users/${userId}`, formData);
+      const response = await axios.patch(
+        // `https://darkroombackend.onrender.com/users/${userId}`,
+        `http://127.0.0.1:5000/users/${userId}`,
+        formData);
       setUser(response.data.data);
       setIsEditing(false);
     } catch (error) {
