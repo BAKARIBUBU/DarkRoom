@@ -22,13 +22,14 @@ api = Api(app)
 # CORS(app, resources={r"/*": {"origins": "https://darkroombackend.onrender.com"}})
 # CORS(app, origins=["https://darkroomfrontend.onrender.com"])
 # # CORS (app)
-CORS(app, resources={r"/*": {"origins": ["https://darkroomfrontend.onrender.com", "http://localhost:5173"]}})
+CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 
 
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://darkroom_user:zmeq2GCjr5jeLhY15srMHprPXZ2bzI87@dpg-csvh60aj1k6c73c68ti0-a.oregon-postgres.render.com/darkroom'
 
-app.config['SQLALCHEMY_DATABASE_URI'] ='postgresql://koyeb-adm:1GSdsXU3PZrc@ep-noisy-cell-a2bzz9kr.eu-central-1.pg.koyeb.app/koyebdb'
+# app.config['SQLALCHEMY_DATABASE_URI'] ='postgresql://koyeb-adm:1GSdsXU3PZrc@ep-noisy-cell-a2bzz9kr.eu-central-1.pg.koyeb.app/koyebdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///darkroom.db'
 
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -1259,6 +1260,7 @@ class UserPosts(Resource):
     def get(self, user_id):
         # Check if the user exists
         user = User.query.filter_by(id=user_id).first()
+        print(f"Fetching posts for user_id: {user_id}")
         if not user:
             return jsonify({'message': 'User not found', 'status': 404})
 
