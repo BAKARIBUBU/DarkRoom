@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import profileicon from '../images/user.png';
+import home from '../images/home.png';
+import movies from '../images/film.png';
+import posts from '../images/addition.png';
+import club from '../images/group.png';
 
 
 const Navbar = () => {
@@ -41,12 +46,12 @@ const Navbar = () => {
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-8">
           {/* Links for homepage, movie, club, post */}
-          <Link to="/" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Home</Link>
+          <Link to="/" className="text-white text-lg font-semibold hover:text-[#1abc9c]"><img src={home} alt="User " className="w-8 h-8 rounded-full" /></Link>
           {/* <Link to="/user" className="text-white text-lg font-semibold hover:text-[#1abc9c]">User</Link> */}
-          <Link to={`/user/${user?.id || 1}`} className="text-white text-lg font-semibold hover:text-[#1abc9c]">User</Link>
-          <Link to="/movies-tracking" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Movies</Link>
-          <Link to="/clubs-manager" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Clubs</Link>
-          <Link to="/posts" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Posts</Link>
+          <Link to={`/user/${user?.id || 1}`} className="text-white text-lg font-semibold hover:text-[#1abc9c]"><img src={profileicon} alt="User " className="w-8 h-8 rounded-full" /></Link>
+          <Link to="/movies-tracking" className="text-white text-lg font-semibold hover:text-[#1abc9c]"><img src={movies} alt="User " className="w-8 h-8 rounded-full" /></Link>
+          <Link to="/clubs-manager" className="text-white text-lg font-semibold hover:text-[#1abc9c]"><img src={club} alt="User " className="w-8 h-8 rounded-full" /></Link>
+          <Link to="/posts" className="text-white text-lg font-semibold hover:text-[#1abc9c]"><img src={posts} alt="User " className="w-8 h-8 rounded-full" /></Link>
           {/* <Link to="/users/:userId/profile" className="text-white text-lg font-semibold hover:text-[#1abc9c]">Profle settings</Link> */}
 
 

@@ -37,7 +37,7 @@ const FollowersList = () => {
 
   return (
     <div className="p-4 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-semibold mb-4">Following List</h1>
+      <h1 className="text-2xl font-semibold mb-4">Followers</h1>
       <ul className="space-y-4">
         {followings.map(following => (
           <li key={following.id} className="flex items-center justify-between p-4 bg-white shadow-md rounded-lg hover:bg-gray-100 transition duration-200">
@@ -49,12 +49,6 @@ const FollowersList = () => {
               />
               <span className="font-medium">{following.username}</span>
             </div>
-            <button 
-              onClick={() => handleUnfollow(following.id)} 
-              className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-200"
-            >
-              Unfollow
-            </button>
           </li>
         ))}
       </ul>
