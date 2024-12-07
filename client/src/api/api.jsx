@@ -1,5 +1,7 @@
 import axios from 'axios';
+import qs from 'qs';
 
+// Create an Axios instance with base configuration
 const api = axios.create({
   baseURL: 'https://darkroombackend.onrender.com', 
   headers: {
@@ -36,6 +38,13 @@ export const CheckFollowStatus = async (userId) => {
 //     }
 // };
 
+// Function to get the token from localStorage
+const getAuthHeader = () => {
+  const token = localStorage.getItem('access_token');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+// Post-related API calls
 export const createPostWithMovie = async (user_id, club_id, content, movie_title, movie_poster_url) => {
   try {
 
@@ -96,6 +105,7 @@ export const getPosts = async () => {
   }
 };
 
+// Comment-related API calls
 export const getComments = async (post_id) => {
   // console.log("Post ID:", post_id)
   const token = localStorage.getItem('access_token');  
@@ -106,31 +116,21 @@ export const getComments = async (post_id) => {
       headers: {
         Authorization: `Bearer ${token}`,  
       },
+      headers: getAuthHeader(), // Automatically include the Authorization header
     });
     // console.log(response);
     console.log("Fetched comments:", response.data.data);
     return response.data.data;
-   } catch (error) {
+  } catch (error) {
     console.error('Error fetching comments:', error);
     throw error;
   }
 };
 
-
 export const createComment = async (post_id, commentData) => {
-  // console.log("Post ID:", post_id)
-  // console.log("Comment Data:", commentData);
-
-  const token = localStorage.getItem('access_token');  
-  // console.log("JWT Token:", token);
-
   try {
-    const response = await api.post(`/comments/${post_id}`,
-      { content: commentData },
-        {
-      headers: {
-        Authorization: `Bearer ${token}`,  
-      },
+    const response = await api.post(`/comments/${post_id}`, commentData, {
+      headers: getAuthHeader(), // Automatically include the Authorization header
     });
     console.log("Payload Sent:", { text: commentData });
 
@@ -222,3 +222,15 @@ export const getFollowings = async (user_id) => {
 };
 
 
+// Rating-related API calls
+export const getRatings = async (movieId) => {
+  try {
+    const response = await api.get(`/ratings?movie_id=${movieId}`, {
+      headers: getAuthHeader(), // Automatically include the Authorization header
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error('Error fetching ratings:', error);
+    throw error;
+  }
+};
