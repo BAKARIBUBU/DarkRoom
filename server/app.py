@@ -2,7 +2,15 @@ from flask import Flask, request, jsonify
 from flask_restful import Api, Resource
 # from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
-from models import db,Club,Comment,Follow,Movie,Post,Rating,User,UserClub
+from models.db import db
+from models.club import Club
+from models.comment import Comment
+from models.follow import Follow
+from models.movie import Movie 
+from models.post import Post 
+from models.rating import Rating
+from models.user import User
+from models.userclub import UserClub
 from flask_jwt_extended import JWTManager,jwt_required, create_access_token, get_jwt_identity
 import os
 from sqlalchemy.orm import joinedload
@@ -33,9 +41,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] ='postgresql://koyeb-adm:1GSdsXU3PZrc@ep-n
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=7)
-app.config['JWT_SECRET_KEY'] = 'EdwinSharonBakariBarkleyFavoured'
+# I commenented line 20 and replaced with inhouse secretkey
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
+# app.config['JWT_SECRET_KEY'] = 'EdwinSharonBakariBarkleyFavoured'
 
 migrate = Migrate(app, db)
 db.init_app(app)
@@ -529,6 +537,25 @@ class ClubByID(Resource):
 
 api.add_resource(ClubByID, '/clubs/<int:id>')
 
+class UserPosts(Resource):
+    def get(self, user_id):
+        # Check if the user exists
+        user = User.query.filter_by(id=user_id).first()
+        if not user:
+            return jsonify({'message': 'User not found', 'status': 404})
+
+        # Fetch posts created by this user
+        posts = Post.query.filter_by(user_id=user_id).all()
+
+        return jsonify({
+            'message': 'User posts fetched successfully',
+            'status': 200,
+            'data': [post.to_dict() for post in posts]  # Assuming Post has a `to_dict` method
+        })
+
+# Register the resource with the API
+api.add_resource(UserPosts, '/users/<int:user_id>/posts')
+
 class PostResource(Resource):
     def get(self):
         # posts = Post.query.all()
@@ -649,24 +676,42 @@ class RatingResource(Resource):
 
     @jwt_required()  # Ensure the user is logged in
     def post(self):
-        data = request.get_json()
+        # Support both JSON and form data
+        movie_id = request.form.get('movie_id') or request.json.get('movie_id')
+        score = request.form.get('score') or request.json.get('score')
+        review = request.form.get('review') or request.json.get('review')
 
-        if not data or 'movie_id' not in data or 'score' not in data or 'review' not in data:
+        # Validate required fields
+        if not movie_id or not score or not review:
             return jsonify({'message': 'Missing required fields', 'status': 400})
 
-        user_id = get_jwt_identity()  # Get the user ID from the JWT token
-        movie_id = data['movie_id']
-        score = data['score']
-        review = data['review']
+        try:
+            score = int(score)
+        except ValueError:
+            return jsonify({'message': 'Score must be a number', 'status': 400})
 
+        if not (1 <= score <= 10):
+            return jsonify({'message': 'Score must be between 1 and 10', 'status': 400})
+
+        if not review.strip():
+            return jsonify({'message': 'Review cannot be empty', 'status': 400})
+
+        # Get user ID from JWT token
+        user_id = get_jwt_identity()
+        if not user_id:
+            return jsonify({'message': 'Invalid or missing token', 'status': 401})
+
+        # Check if the movie exists
         movie = Movie.query.filter_by(id=movie_id).first()
         if not movie:
             return jsonify({'message': 'Movie not found', 'status': 404})
 
+        # Check if the user has already rated the movie
         existing_rating = Rating.query.filter_by(user_id=user_id, movie_id=movie_id).first()
         if existing_rating:
             return jsonify({'message': 'User has already rated this movie', 'status': 400})
 
+        # Create and save the new rating
         new_rating = Rating(user_id=user_id, movie_id=movie_id, score=score, review=review)
         db.session.add(new_rating)
         db.session.commit()
@@ -696,10 +741,28 @@ class RatingByID(Resource):
         if rating.user_id != user_id:
             return jsonify({'message': 'Unauthorized to update this rating', 'status': 403})
 
-        data = request.get_json()
+        # Support both JSON and form data
+        data = request.get_json(silent=True) or {}
+        movie_id = request.form.get('movie_id') or data.get('movie_id')
+        score = request.form.get('score') or data.get('score')
+        review = request.form.get('review') or data.get('review')
 
-        for key, value in data.items():
-            setattr(rating, key, value)
+        if movie_id:
+            rating.movie_id = movie_id
+        if score:
+            try:
+                score = int(score)
+                if 1 <= score <= 10:
+                    rating.score = score
+                else:
+                    return jsonify({'message': 'Score must be between 1 and 10', 'status': 400})
+            except ValueError:
+                return jsonify({'message': 'Score must be a number', 'status': 400})
+        if review:
+            if review.strip():
+                rating.review = review
+            else:
+                return jsonify({'message': 'Review cannot be empty', 'status': 400})
 
         db.session.commit()
 
@@ -723,6 +786,148 @@ class RatingByID(Resource):
         return jsonify({'message': 'Rating successfully deleted', 'status': 200})
 
 api.add_resource(RatingByID, '/ratings/<int:id>')
+
+# class RatingResource(Resource):
+#     def get(self):
+#         movie_id = request.args.get('movie_id')
+#         if movie_id:
+#             ratings = Rating.query.filter_by(movie_id=movie_id).all()
+#         else:
+#             ratings = Rating.query.all()
+
+#         return jsonify({'message': 'Ratings fetched successfully', 'status': 200, 'data': [rating.to_dict() for rating in ratings]})
+
+#     # @jwt_required()  # Ensure the user is logged in
+#     # def post(self):
+#     #     data = request.get_json()
+
+#     #     if not data or 'movie_id' not in data or 'score' not in data or 'review' not in data:
+#     #         return jsonify({'message': 'Missing required fields', 'status': 400})
+
+#     #     user_id = get_jwt_identity()# Get the user ID from the JWT token
+#     #     if not user_id:
+#     #         return jsonify({'message': 'Invalid or missing token', 'status': 401})
+        
+#     #     movie_id = data['movie_id']
+
+#     #     score = data['score']
+#     #     if not (1 <= score <= 10):
+#     #         return jsonify({'message': 'Score must be between 1 and 10', 'status': 400})
+
+#     #     review = data['review']
+#     #     if not review.strip():
+#     #         return jsonify({'message': 'Review cannot be empty', 'status': 400})
+
+
+#     #     movie = Movie.query.filter_by(id=movie_id).first()
+#     #     if not movie:
+#     #         return jsonify({'message': 'Movie not found', 'status': 404})
+
+#     #     existing_rating = Rating.query.filter_by(user_id=user_id, movie_id=movie_id).first()
+#     #     if existing_rating:
+#     #         return jsonify({'message': 'User has already rated this movie', 'status': 400})
+
+#     #     new_rating = Rating(user_id=user_id, movie_id=movie_id, score=score, review=review)
+#     #     db.session.add(new_rating)
+#     #     db.session.commit()
+
+#     #     return jsonify({'message': 'Rating created successfully', 'status': 201, 'data': new_rating.to_dict()})
+#     @jwt_required()  # Ensure the user is logged in
+#     def post(self):
+#     # Parse form data instead of JSON
+#        movie_id = request.form.get('movie_id')
+#        score = request.form.get('score')
+#        review = request.form.get('review')
+
+#     # Validate required fields
+#        if not movie_id or not score or not review:
+#          return jsonify({'message': 'Missing required fields', 'status': 400})
+
+#        try:
+#          score = int(score)
+#        except ValueError:
+#          return jsonify({'message': 'Score must be a number', 'status': 400})
+
+#        if not (1 <= score <= 10):
+#          return jsonify({'message': 'Score must be between 1 and 10', 'status': 400})
+
+#        if not review.strip():
+#           return jsonify({'message': 'Review cannot be empty', 'status': 400})
+       
+#        print(request.headers.get('Authorization'))
+#     # Get user ID from JWT token
+#        user_id = get_jwt_identity()
+#        print('User ID:', user_id)
+#        if not user_id:
+#           return jsonify({'message': 'Invalid or missing token', 'status': 401})
+
+#     # Check if the movie exists
+#        movie = Movie.query.filter_by(id=movie_id).first()
+#        if not movie:
+#           return jsonify({'message': 'Movie not found', 'status': 404})
+
+#     # Check if the user has already rated the movie
+#        existing_rating = Rating.query.filter_by(user_id=user_id, movie_id=movie_id).first()
+#        if existing_rating:
+#           return jsonify({'message': 'User has already rated this movie', 'status': 400})
+
+#     # Create and save the new rating
+#        new_rating = Rating(user_id=user_id, movie_id=movie_id, score=score, review=review)
+#        db.session.add(new_rating)
+#        db.session.commit()
+
+#        return jsonify({'message': 'Rating created successfully', 'status': 201, 'data': new_rating.to_dict()})
+
+# api.add_resource(RatingResource, '/ratings')
+
+# class RatingByID(Resource):
+#     def get(self, id):
+#         rating = Rating.query.filter_by(id=id).first()
+
+#         if not rating:
+#             return jsonify({'message': 'Rating not found', 'status': 404})
+
+#         return jsonify({'message': 'Rating fetched successfully', 'status': 200, 'data': rating.to_dict()})
+
+#     @jwt_required()  # Ensure the user is logged in
+#     def patch(self, id):
+#         rating = Rating.query.filter_by(id=id).first()
+
+#         if not rating:
+#             return jsonify({'message': 'Rating not found', 'status': 404})
+
+#         user_id = get_jwt_identity()
+
+#         if rating.user_id != user_id:
+#             return jsonify({'message': 'Unauthorized to update this rating', 'status': 403})
+
+#         data = request.get_json()
+
+#         for key, value in data.items():
+#             setattr(rating, key, value)
+
+#         db.session.commit()
+
+#         return jsonify({'message': 'Rating updated successfully', 'status': 200, 'data': rating.to_dict()})
+
+#     @jwt_required()  # Ensure the user is logged in
+#     def delete(self, id):
+#         rating = Rating.query.filter_by(id=id).first()
+
+#         if not rating:
+#             return jsonify({'message': 'Rating not found', 'status': 404})
+
+#         user_id = get_jwt_identity()
+
+#         if rating.user_id != user_id:
+#             return jsonify({'message': 'Unauthorized to delete this rating', 'status': 403})
+
+#         db.session.delete(rating)
+#         db.session.commit()
+
+#         return jsonify({'message': 'Rating successfully deleted', 'status': 200})
+
+# api.add_resource(RatingByID, '/ratings/<int:id>')
 
 class CommentResource(Resource):
     def get(self, post_id):
