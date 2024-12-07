@@ -45,22 +45,23 @@ export const createPostWithMovie = async (user_id, club_id, content, movie_title
       throw new Error('Authorization token is missing');
     }
 
-    const response = await api.post('/posts', 
-      { 
-        user_id, 
-        club_id, 
-        content, 
-        movie_title, 
-        movie_poster_url 
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`, // Add Authorization header
-        },
-      }
-    );
-    // console.log(response);
+    // const response = await api.post('/posts', 
+    //   { 
+    //     user_id, 
+    //     club_id, 
+    //     content, 
+    //     movie_title, 
+    //     movie_poster_url 
+    //   },
+    //   {
+    //     headers: {
+    //       Authorization: `Bearer ${token}`, // Add Authorization header
+    //     },
+    //   }
+    // );
+    // // console.log(response);
 
+    const response = await api.post('/posts', { user_id, club_id, content, movie_title, movie_poster_url });
     return response.data.data;
   } catch (error) {
     console.error('Error creating post:', error);

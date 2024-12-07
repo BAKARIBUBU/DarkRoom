@@ -16,6 +16,7 @@ import UserProfile from "./Page/UserProfile";
 import { createPostWithMovie } from './api/api';
 import FollowingList from './components/Follow/FollowingList';
 import FollowersList from './components/Follow/FollowersList';
+// import RatingsPage from "./Page/RatingsPage"; 
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -156,6 +157,13 @@ const AppContent = ({ isAuthenticated, user, setUser, posts, handleCreatePost, i
           />
 
           <Route path="/posts/:postId" element={<PostPage />} />
+
+          {/* Create Post route */}
+          <Route path="/create" element={<CreatePostForm userId={user ? user.id : 1} />} />
+
+           {/* Route for movie ratings */}
+          {/* <Route path="/movies/:id/ratings" element={<RatingsPage />} /> */}
+
         </Routes>
       </div>
 
