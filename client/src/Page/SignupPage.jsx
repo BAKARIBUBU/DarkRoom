@@ -14,26 +14,57 @@ const SignupPage = () => {
     e.preventDefault();
     setErrorMessage('');
     setSuccessMessage('');
-
+  
     try {
       const response = await axios.post('https://darkroombackend.onrender.com/register', {
         username,
         email,
         password
       });
-
+  
       if (response.data.status === 201) {
         setSuccessMessage('Registration successful! Redirecting to login...');
-
+  
         // Redirect to login page after a short delay
         setTimeout(() => navigate('/login'), 2000);
       } else {
+        // Show the specific error message from the server if available
         setErrorMessage(response.data.message || 'An error occurred');
       }
     } catch (error) {
-      setErrorMessage(error.response?.data?.message || 'Registration failed');
+      // In case the server returns a response with specific error message
+      if (error.response && error.response.data) {
+        setErrorMessage(error.response.data.message || 'Registration failed due to an unknown error');
+      } else {
+        setErrorMessage('Registration failed. Please try again later.');
+      }
     }
   };
+  
+  // const handleSignup = async (e) => {
+  //   e.preventDefault();
+  //   setErrorMessage('');
+  //   setSuccessMessage('');
+
+  //   try {
+  //     const response = await axios.post('http://127.0.0.1:5555/register', {
+  //       username,
+  //       email,
+  //       password
+  //     });
+
+  //     if (response.data.status === 201) {
+  //       setSuccessMessage('Registration successful! Redirecting to login...');
+
+  //       // Redirect to login page after a short delay
+  //       setTimeout(() => navigate('/login'), 2000);
+  //     } else {
+  //       setErrorMessage(response.data.message || 'An error occurred');
+  //     }
+  //   } catch (error) {
+  //     setErrorMessage(error.response?.data?.message || 'Registration failed');
+  //   }
+  // };
 
   return (
     <section className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
